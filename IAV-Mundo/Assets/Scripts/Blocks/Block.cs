@@ -43,15 +43,15 @@ public class Block
     //public enum BlockType { AIR, GRASS, DIRT, STONE, DEEPSLATE, BEDROCK }
 
     public Vector3 position;
-    public bool isSolid;
 
     public BlockType type;
-    public Block(BlockType type, Vector3 position, bool isSolid = true)
+    public Block(BlockType type, Vector3 position)
     {
         this.position = position;
         this.type = type;
-        this.isSolid = type.isSolid;
     }
+
+    public bool isSolid(){return type.isSolid;}
 
     public void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
     {

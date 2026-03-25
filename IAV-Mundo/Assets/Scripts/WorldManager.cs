@@ -21,6 +21,7 @@ public class WorldManager : MonoBehaviour
     public float densityThreshold = 0.1f;
     public int maxSolidHeight = 12;
     public int initialGridSize = 5;
+    public int chunkHeight = 32;
     private Coroutine buildRoutine;
     private Coroutine renderRoutine;
     private Dictionary<Vector2Int, GameObject> activeChunks = new();
@@ -32,6 +33,13 @@ public class WorldManager : MonoBehaviour
         for (int cz = 0; cz < initialGridSize; cz++)
         {
             SpawnChunk(new Vector2Int(cx, cz));
+        }
+        for (int cx = 0; cx < initialGridSize; cx++)
+        for (int cz = 0; cz < initialGridSize; cz++)
+        {
+            Chunk chunk = GetChunk(new(cx, cz));
+            if(chunk == null) continue;
+            chunk.DrawChunk();
         }
     }
     void Update()
@@ -165,10 +173,8 @@ public class WorldManager : MonoBehaviour
         chunkObj.transform.position = new Vector3(chunkPos.x, 0, chunkPos.y);
         
         Chunk chunk = chunkObj.GetComponent<Chunk>();
-        chunk.Setup(scale, octaves, persistence, densityScale, densityThreshold, maxSolidHeight);
-        chunk.Initialize(coord, chunkMaterial, this);
-        chunk.CarveChunk();
-        chunk.PaintChunk();
+        chunk.Setup(scale, octaves, persistence, densityScale, densityThreshold, maxSolidHeight, chunkHeight);
+        chunk.Initialize(new(coord.x, coord.y), chunkMaterial, this);
         // TODO: Registar no Dictionary activeChunks
         activeChunks.Add(coord, chunkObj);
     }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {
     public const int chunkSize = 16;
+    public int chunkHeight = 16;
     public Block[,,] chunkData;
     public Material chunkMaterial;
     [Header("Cave Config")]
@@ -42,7 +43,7 @@ public class Chunk : MonoBehaviour
 
     }
 
-    public void Setup(float scale, int octaves, float persistence, float densityScale, float densityThreshold, int maxSolidHeight)
+    public void Setup(float scale, int octaves, float persistence, float densityScale, float densityThreshold, int maxSolidHeight, int chunkHeight)
     {
         this.octaves = octaves;
         this.scale = scale;
@@ -50,67 +51,49 @@ public class Chunk : MonoBehaviour
         this.densityScale = densityScale;
         this.densityThreshold = densityThreshold;
         this.maxSolidHeight = maxSolidHeight;
+        this.chunkHeight = chunkHeight;
     }
 
-    public void CarveChunk()
+    void InitializeChunk()
     {
-        /*int caveLookupMargin = 1;
-        for(int x = -caveLookupMargin*chunkSize; x < (1 + caveLookupMargin)*chunkSize; x++)
-        for(int z = -caveLookupMargin*chunkSize; z < (1 + caveLookupMargin)*chunkSize; z++)
-        {
-            int blockX = x + worldOffset.x*chunkSize; 
-            int blockZ = z + worldOffset.y*chunkSize; 
-            for(int y = maxSolidHeight; y > 1; y--)
-            {
-                //cave gen
-                //if(solid y > 1 && y < maxSolidHeight - caveSurfaceProtectionMargin)
-                float cx = blockX * caveScale;
-                float cy = y * caveScale;
-                float cz = blockZ * caveScale;
+        chunkData = new Block[chunkSize, chunkHeight, chunkSize];
 
-                float caveNoise = NoiseUtil.Perlin3D(cx, cy, cz);
-                if(caveNoise > caveThreshold)
-                {
-                    CarveWorm(this, chunkSize, worldOffset, new(blockX, y, blockZ),
-                        wormSteps, wormRadius, wormStepSize, wormDirectionScale);
-                }
-            } 
-        }*/
-        
-        //cave gen
         for(int x = 0; x < chunkSize; x++)
         for(int z = 0; z < chunkSize; z++)
         {
             int blockX = x + worldOffset.x*chunkSize; 
             int blockZ = z + worldOffset.y*chunkSize; 
-            for(int y = maxSolidHeight - caveSurfaceProtectionMargin; y > 1; y--)
-            {
-                if(!chunkData[x, y, z].isSolid) continue;
-                //if(solid y > 1 && y < maxSolidHeight - caveSurfaceProtectionMargin)
-                float cx = blockX * caveScale;
-                float cy = y * caveScale;
-                float cz = blockZ * caveScale;
-
-                float caveNoise = NoiseUtil.Perlin3D(cx, cy, cz);
-                if(caveNoise > caveThreshold)
-                {
-                    chunkData[x, y, z].type = BlockTypes.AIR;
-                    chunkData[x, y, z].isSolid = false;
-                }
-            } 
-        }
-
-    }
-    public void PaintChunk()
-    {
         
-        for(int x = 0; x < chunkSize; x++)
-        for(int z = 0; z < chunkSize; z++)
-        {
+            float heightNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence), 0.3f);
+            float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.001f), 1.5f);
+            float mountains = NoiseUtil.FBm(blockX, blockZ, 2, 0.005f);
+
+            float terrainHeight = (
+                heightNoise * chunkHeight
+                - (1-oceanNoise) * 20
+                );
+
             int surfaceBlockCount = 0;
-            for(int y = chunkSize - 1; y >= 0; y--)
+            for(int y = chunkHeight - 1; y >= 0; y--)
             {
-                bool solid = chunkData[x, y, z].isSolid;
+                /*float densityNoise = NoiseUtil.Perlin3D(blockX * densityScale, y * densityScale, blockZ * densityScale) * 2f - 1f;
+                float finalDensity = heightNoise - y + densityNoise;
+                bool solid = finalDensity > densityThreshold;*/
+                bool solid = y < terrainHeight;
+
+                //cave  
+                if(solid && y > 1 && y < maxSolidHeight)
+                    {
+                        float cx = blockX * caveScale;
+                        float cy = y * caveScale;
+                        float cz = blockZ * caveScale;
+
+                        float caveNoise = NoiseUtil.Perlin3D(cx, cy, cz);
+                        if(caveNoise > caveThreshold)
+                        {
+                            solid = false;
+                        }
+                    }
 
                 //block attribution
                 BlockType type = BlockTypes.AIR;
@@ -126,54 +109,16 @@ public class Chunk : MonoBehaviour
                     } 
                     
                     //if its right below grass, paint dirt.
-                    if(y < chunkSize - 1 && chunkData[x, y+1, z].type == BlockTypes.GRASS) 
+                    if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.GRASS) 
+                        type = BlockTypes.DIRT;  
+                    if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.GRASS) 
                         type = BlockTypes.DIRT;   
                     
-                    if(surfaceBlockCount > 7 || y < 3) type = BlockTypes.DEEPSLATE;
+                    if(surfaceBlockCount > 16 || y < 3) type = BlockTypes.DEEPSLATE;
                     
                 } 
                 if(y == 0) type = BlockTypes.BEDROCK;
-                /*if(y < h) type = Block.BlockType.STONE;
-                if (y == h - 1)
-                    type = Block.BlockType.GRASS;
-                else if (y > h - 3)
-                    type = Block.BlockType.DIRT;
-                if(h - y > 6)
-                    type = Block.BlockType.DEEPSLATE;
-                if(y == 0)
-                    type = Block.BlockType.BEDROCK;
-                if(y >= h || !solid)
-                    type = Block.BlockType.AIR;*/
-                chunkData[x, y, z].type = type;
-            } 
-        }
-    }
-
-    void InitializeChunk()
-    {
-        chunkData = new Block[chunkSize, chunkSize, chunkSize];
-
-        for(int x = 0; x < chunkSize; x++)
-        for(int z = 0; z < chunkSize; z++)
-        {
-            int blockX = x + worldOffset.x*chunkSize; 
-            int blockZ = z + worldOffset.y*chunkSize; 
-            
-            int symmetryMitigation = 16;
-            float noise = 0.5f * NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence) 
-                            + 0.5f * NoiseUtil.FBm(blockX + symmetryMitigation, blockZ + symmetryMitigation, octaves, scale, persistence);
-            float heightNoise = Mathf.Pow(noise , 0.5f) * chunkSize;
-            
-            for(int y = chunkSize - 1; y >= 0; y--)
-            {
-                float densityNoise = NoiseUtil.Perlin3D(blockX * densityScale, y * densityScale, blockZ * densityScale) * 2f - 1f;
-                float finalDensity = heightNoise - y + densityNoise;
-                bool solid = finalDensity > densityThreshold;
-
-                //block attribution
-                BlockType type = BlockTypes.AIR;
-                if (solid) type = BlockTypes.STONE;
-                chunkData[x, y, z] = new Block(type, new Vector3(x, y, z));
+                chunkData[x, y, z] = new Block(type, new(x, y, z));
             } 
         }
     }
@@ -235,11 +180,11 @@ public class Chunk : MonoBehaviour
 
         // 2 - para cada bloco, adicionar todas as faces
         for(int x = 0; x < chunkSize; x++)
-        for(int y = 0; y < chunkSize; y++)
+        for(int y = 0; y < chunkHeight; y++)
         for(int z = 0; z < chunkSize; z++)
         {
             Block block = chunkData[x, y, z];
-            if(!block.isSolid)
+            if(!block.isSolid())
                 {
                     block.AddNonSolidFaceToMesh(vertices, triangles, uvs);
                     continue;   
@@ -279,18 +224,18 @@ public class Chunk : MonoBehaviour
     
     bool HasSolidNeighbour(int x, int y, int z)
     {
-        if(y > chunkSize - 1 || y < 0 ) return false;
+        if(y > chunkHeight - 1 || y < 0 ) return false;
         Vector2Int offset = Vector2Int.zero;
         if(x > chunkSize - 1) offset = new Vector2Int(1, 0);
         if(x < 0) offset = new Vector2Int(-1, 0);
         if(z > chunkSize - 1) offset = new Vector2Int(0, 1);
         if(z < 0) offset = new Vector2Int(0, -1);
-        if(Vector2Int.zero == offset) return chunkData[x, y, z].isSolid;
+        if(Vector2Int.zero == offset) return chunkData[x, y, z].isSolid();
 
         Chunk neighborChunk = worldManager.GetChunk(worldOffset + offset);
         if(null == neighborChunk) return false;
         int newX = (x + chunkSize) % chunkSize;
         int newZ = (z + chunkSize) % chunkSize;
-        return neighborChunk.chunkData[newX, y, newZ].isSolid;
+        return neighborChunk.chunkData[newX, y, newZ].isSolid();
     }
 }

@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d6a38b2ef39e44da5dfbf7c0073c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
+  chunkHeight: 16
   chunkMaterial: {fileID: 0}
   caveScale: 0.1
   caveThreshold: 0.56

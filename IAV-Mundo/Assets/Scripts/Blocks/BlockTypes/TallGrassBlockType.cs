@@ -8,7 +8,7 @@ public class TallGrassBlockType : BlockType
 
 
     //TODO
-    public void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
+    public new void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
     {        
         /*int vertexIndex = vertices.Count;
         List<Vector3> faceVerts = Block.FaceVerticesMap[face];

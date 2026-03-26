@@ -100,8 +100,8 @@ public class WorldManager : MonoBehaviour
         HashSet<Vector2Int> toRemove = new HashSet<Vector2Int>();
         foreach(Vector2Int vec in activeChunks.Keys)
         {
-            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance 
-                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance ){
+            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance*1.5f 
+                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance*1.5f ){
                 toRemove.Add(vec);
             }
         }

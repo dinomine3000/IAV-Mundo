@@ -416,6 +416,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   speed: 25
+  playerCamera: {fileID: 330585546}
+  mouseSensitivity: 20
 --- !u!136 &420915235
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -595,15 +597,15 @@ MonoBehaviour:
   chunkMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
   renderDistance: 5
   chunksGeneratedPerFrame: 2
-  chunksRenderedPerFrame: 5
+  chunksRenderedPerFrame: 1
   octaves: 4
   persistence: 0.3
   scale: 0.03
   densityScale: 0.2
   densityThreshold: 0.1
-  maxSolidHeight: 25
+  maxSolidHeight: 15
   initialGridSize: 5
-  chunkHeight: 64
+  chunkHeight: 50
 --- !u!4 &2140951847
 Transform:
   m_ObjectHideFlags: 0

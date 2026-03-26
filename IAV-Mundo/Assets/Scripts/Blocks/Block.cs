@@ -54,7 +54,7 @@ public class Block
 
     public bool isSolid(){return type.isSolid;}
 
-    public bool ObstructsFace(bool isWaterCalling){return (!IsWater() && isSolid()) || (IsWater() && isWaterCalling);}
+    public bool ObstructsFace(bool isWaterCalling){return (isWaterCalling && (IsWater() || isSolid())) || (!isWaterCalling && isSolid());}
 
     public bool IsWater(){return type.IsSameBlock(BlockTypes.WATER) || type.IsSameBlock(BlockTypes.FULL_WATER);}
 

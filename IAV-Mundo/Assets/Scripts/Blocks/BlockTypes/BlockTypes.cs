@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VectorGraphics;
 
 public class BlockTypes
 {
@@ -20,7 +21,7 @@ public class BlockTypes
     public static BlockType SAND = registerBlock("sand", new BlockType(new(0, 176)));
     public static BlockType DEEPSLATE = registerBlock("deepslate", new BlockType(new(128, 128)));
     public static BlockType WATER = registerBlock("water", new WaterBlockType(new(208, 192)));
-    public static BlockType FULL_WATER = registerBlock("full_water", new BlockType(new(208, 192), defaultTransparency: true));
+    public static BlockType FULL_WATER = registerBlock("full_water", new BlockType(new(208, 192), isSolid: false, defaultTransparency: true));
     public static BlockType TALL_GRASS = registerBlock("tall_grass", new TallGrassBlockType(new(112, 32)));
     public static BlockType registerBlock(string blockId, BlockType type)
     { 

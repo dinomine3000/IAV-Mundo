@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 
 public class WaterBlockType : BlockType
 {
-    public WaterBlockType(Vector2Int uvPos) : base(uvPos, isSolid: true, customMesh: true, defaultTransparency: true)
+    public WaterBlockType(Vector2Int uvPos) : base(uvPos, isSolid: false, customMesh: true, defaultTransparency: true)
     {}
 
     static readonly Vector3 v0 = new Vector3(0.5f, -0.5f, 0.5f);

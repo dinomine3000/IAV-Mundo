@@ -129,7 +129,7 @@ public class Chunk : MonoBehaviour
                     if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.GRASS) 
                         type = BlockTypes.DIRT;   
                         
-                    //if its right below sand, paint sand.
+                    //if its right below sand, paint sandstone.
                     if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.SAND) 
                         type = BlockTypes.SANDSTONE;  
                     if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.SAND) 
@@ -214,7 +214,7 @@ public class Chunk : MonoBehaviour
         for(int z = 0; z < chunkSize; z++)
         {
             Block block = chunkData[x, y, z];
-            if(!block.isSolid())
+            if(!block.isSolid() && !block.IsWater())
                 {
                     if(block.IsFaceTransparent(Block.CubeFace.ALL)) block.AddNonSolidFaceToMesh(transparentVertices, transparentTriangles, transparentUvs);
                     else block.AddNonSolidFaceToMesh(vertices, triangles, uvs);

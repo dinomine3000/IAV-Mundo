@@ -148,55 +148,6 @@ public class Chunk : MonoBehaviour
             } 
         }
     }
-    public static void CarveWorm(Chunk centerChunk, int chunkSize,
-                                    Vector2Int worldOffset,
-                                    Vector3 start, int steps, float radius,
-                                    float stepSize, float directionScale)
-    {
-        Vector3 pos = start;
-        for (int i = 0; i < steps; i++)
-        {
-            // Direcção determinada por noise
-            float nx = NoiseUtil.Perlin3D(pos.x * directionScale,
-                                            pos.y * directionScale,
-                                            pos.z * directionScale) * 2f - 1f;
-            float ny = NoiseUtil.Perlin3D(pos.y * directionScale + 100f,
-                                            pos.z * directionScale + 100f,
-                                            pos.x * directionScale + 100f) * 2f - 1f;
-            float nz = NoiseUtil.Perlin3D(pos.z * directionScale + 200f,
-                                            pos.x * directionScale + 200f,
-                                            pos.y * directionScale + 200f) * 2f - 1f;
-            Vector3 dir = new Vector3(nx, ny * 0.5f, nz).normalized;
-            pos += dir * stepSize;
-            // Escavar esfera à volta da posição actual
-            CarveAt(centerChunk, chunkSize, worldOffset, pos, radius);
-        }
-    }
-    static void CarveAt(Chunk centerChunk, int chunkSize,
-                        Vector2Int worldOffset, Vector3 center, float radius)
-    {
-        int localX = Mathf.RoundToInt(center.x) - worldOffset.x * chunkSize;
-        int localY = Mathf.RoundToInt(center.y);
-        int localZ = Mathf.RoundToInt(center.z) - worldOffset.y * chunkSize;
-        int r = Mathf.CeilToInt(radius);
-        for (int dx = -r; dx <= r; dx++)
-        for (int dy = -r; dy <= r; dy++)
-        for (int dz = -r; dz <= r; dz++)
-        {
-            if (dx * dx + dy * dy + dz * dz > radius * radius) continue;
-            int bx = localX + dx;
-            int by = localY + dy;
-            int bz = localZ + dz;
-            if (bx >= 0 && bx < chunkSize 
-                && by > 1 && by < chunkSize 
-                && bz >= 0 && bz < chunkSize)
-            {
-                centerChunk.chunkData[bx, by, bz].type = BlockTypes.AIR;
-            }
-        }
-    }
-
-
     public void DrawChunk()
     {
         // 1 - criar listas partilhadas

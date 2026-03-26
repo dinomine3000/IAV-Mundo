@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using NUnit.Framework;
 using System.Linq;
-using System;
 using UnityEditor;
+using NUnit.Compatibility;
 
 public class Block
 {
@@ -14,14 +13,14 @@ public class Block
     //O Unity inverte este eixo (quando comparado com os guias)
     //Desta maneira, posso referenciar os vértices como na aula 1
     //Quando comparando com a scripts cubeGen.cs, resulta que estes são os valores que usei para cada vértice na aula 1
-    static readonly Vector3 v0 = new Vector3(0.5f, -0.5f, 0.5f);
-    static readonly Vector3 v1 = new Vector3(-0.5f, -0.5f, 0.5f);
-    static readonly Vector3 v2 = new Vector3(-0.5f, -0.5f, -0.5f);
-    static readonly Vector3 v3 = new Vector3(0.5f, -0.5f, -0.5f);
-    static readonly Vector3 v4 = new Vector3(0.5f, 0.5f, 0.5f);
-    static readonly Vector3 v5 = new Vector3(-0.5f, 0.5f, 0.5f);
-    static readonly Vector3 v6 = new Vector3(-0.5f, 0.5f, -0.5f);
-    static readonly Vector3 v7 = new(0.5f, 0.5f, -0.5f);
+    public static readonly Vector3 v0 = new Vector3(0.5f, -0.5f, 0.5f);
+    public static readonly Vector3 v1 = new Vector3(-0.5f, -0.5f, 0.5f);
+    public static readonly Vector3 v2 = new Vector3(-0.5f, -0.5f, -0.5f);
+    public static readonly Vector3 v3 = new Vector3(0.5f, -0.5f, -0.5f);
+    public static readonly Vector3 v4 = new Vector3(0.5f, 0.5f, 0.5f);
+    public static readonly Vector3 v5 = new Vector3(-0.5f, 0.5f, 0.5f);
+    public static readonly Vector3 v6 = new Vector3(-0.5f, 0.5f, -0.5f);
+    public static readonly Vector3 v7 = new(0.5f, 0.5f, -0.5f);
 
     //outra vez, a ordem destes vértices tá diferente dos guias/das aulas, mas mais abaixo
     //quando defino a ordem dos vértices, também difere para ajustar.
@@ -53,14 +52,24 @@ public class Block
 
     public bool isSolid(){return type.isSolid;}
 
+    public bool ObstructsFace(bool isWaterCalling){return (!IsWater() && isSolid()) || (IsWater() && isWaterCalling);}
+
+    public bool IsWater(){return type.IsSameBlock(BlockTypes.WATER) || type.IsSameBlock(BlockTypes.FULL_WATER);}
+
     public void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
     {
-        type.AddNonSolidFaceToMesh(vertices, triangles, uvs);
+        if(type.HasSingleFace())
+            type.AddCustomFaceToMesh(CubeFace.ALL, vertices, triangles, uvs, position);
     }
 
     public void AddSolidFaceToMesh(CubeFace face,
         List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
     {
+        if (type.HasCustomMesh())
+        {
+            type.AddCustomFaceToMesh(face, vertices, triangles, uvs, position);
+            return;
+        }
         int vertexIndex = vertices.Count;
         List<Vector3> faceVerts = FaceVerticesMap[face];
         List<Vector3> worldVerts = faceVerts.Select(v => v + position).ToList();
@@ -74,39 +83,13 @@ public class Block
         uvs.AddRange(GetUVs(face, type));
     }
 
-    static readonly int TEXTURE_WIDTH = 256;
-    static readonly int TEXTURE_HEIGHT = 256;
-    static readonly float BLOCK_TEX_WIDTH = 16f;
-    static readonly float BLOCK_TEX_HEIGHT = 16f;
+    public static readonly int TEXTURE_WIDTH = 256;
+    public static readonly int TEXTURE_HEIGHT = 256;
+    public static readonly float BLOCK_TEX_WIDTH = 16f;
+    public static readonly float BLOCK_TEX_HEIGHT = 16f;
     public static Vector2[] GetUVs(CubeFace face, BlockType type)
     {
         Vector2 ltc = type.GetUvTLC(face);
-        /*switch (type)
-        {
-            case BlockType.GRASS:
-                if (face == CubeFace.Top) ltc = new Vector2(128f, 32f);
-                else if (face == CubeFace.Bottom) goto Dirt;
-                else ltc = new Vector2(48f, 0f);
-                break;
-            case BlockType.DIRT:
-                Dirt:
-                ltc = new Vector2(32f, 0f);
-                break;
-            case BlockType.DEEPSLATE:
-                ltc = new Vector2(128f, 128f);
-                break;
-            case BlockType.STONE:
-                ltc = new Vector2(16f, 0f);
-                break;
-            case BlockType.BEDROCK:
-                ltc = new Vector2(16f, 16f);
-                break;
-            default:
-                ltc = new Vector2(16f, 16f);
-                break;
-        }*/
-
-        //ltc = new Vector2(128f, 32f);
         //até agora, conta-se as coordenadas de cima para baixo. a partir de agora, conta-se de baixo para cima
         //de "y sobe para baixo" para "y sobe para cima"
         //minecraft tende a fazer da primeira maneira (e varios programas de edicao de imagem)

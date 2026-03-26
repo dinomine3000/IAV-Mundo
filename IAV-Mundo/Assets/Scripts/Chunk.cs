@@ -9,6 +9,7 @@ public class Chunk : MonoBehaviour
     public const int chunkSize = 16;
     public int chunkHeight = 16;
     public Block[,,] chunkData;
+    public int waterLevel = 35;
     public Material chunkMaterial;
     [Header("Cave Config")]
     public float caveScale = 0.1f;
@@ -106,7 +107,7 @@ public class Chunk : MonoBehaviour
                     type = BlockTypes.STONE;  
                     if(surfaceBlockCount == 0)
                     {
-                        if(y > 40) type = BlockTypes.GRASS;
+                        if(y > waterLevel + 2) type = BlockTypes.GRASS;
                         else type = BlockTypes.SAND;
                         surfaceBlockCount++;  
                     } 
@@ -125,7 +126,12 @@ public class Chunk : MonoBehaviour
                     
                     if(surfaceBlockCount > 16 || y < 3) type = BlockTypes.DEEPSLATE;
                     
-                } 
+                } else if(surfaceBlockCount == 0 && y <= waterLevel)
+                {
+                    type = BlockTypes.WATER;
+                    if(y < chunkHeight - 1 && chunkData[x, y+1, z].IsWater()) 
+                        type = BlockTypes.FULL_WATER;  
+                }
                 if(y == 0) type = BlockTypes.BEDROCK;
                 chunkData[x, y, z] = new Block(type, new(x, y, z));
             } 
@@ -199,17 +205,17 @@ public class Chunk : MonoBehaviour
                     continue;   
                 }
             
-            if(!HasSolidNeighbour(x, y, z + 1))
+            if(!HasSolidNeighbour(x, y, z + 1, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Front, vertices, triangles, uvs);
-            if(!HasSolidNeighbour(x, y, z - 1))
+            if(!HasSolidNeighbour(x, y, z - 1, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Back, vertices, triangles, uvs);
-            if(!HasSolidNeighbour(x, y + 1, z))
+            if(!HasSolidNeighbour(x, y + 1, z, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Top, vertices, triangles, uvs);
-            if(!HasSolidNeighbour(x, y - 1, z))
+            if(!HasSolidNeighbour(x, y - 1, z, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Bottom, vertices, triangles, uvs);
-            if(!HasSolidNeighbour(x - 1, y, z))
+            if(!HasSolidNeighbour(x - 1, y, z, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Left, vertices, triangles, uvs);
-            if(!HasSolidNeighbour(x + 1, y, z))
+            if(!HasSolidNeighbour(x + 1, y, z, block.IsWater()))
                 block.AddSolidFaceToMesh(Block.CubeFace.Right, vertices, triangles, uvs);
         }   
 
@@ -231,7 +237,7 @@ public class Chunk : MonoBehaviour
         gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     }
     
-    bool HasSolidNeighbour(int x, int y, int z)
+    bool HasSolidNeighbour(int x, int y, int z, bool isWaterCalling)
     {
         if(y > chunkHeight - 1 || y < 0 ) return false;
         Vector2Int offset = Vector2Int.zero;
@@ -239,12 +245,12 @@ public class Chunk : MonoBehaviour
         if(x < 0) offset = new Vector2Int(-1, 0);
         if(z > chunkSize - 1) offset = new Vector2Int(0, 1);
         if(z < 0) offset = new Vector2Int(0, -1);
-        if(Vector2Int.zero == offset) return chunkData[x, y, z].isSolid();
+        if(Vector2Int.zero == offset) return chunkData[x, y, z].ObstructsFace(isWaterCalling);
 
         Chunk neighborChunk = worldManager.GetChunk(worldOffset + offset);
         if(null == neighborChunk) return false;
         int newX = (x + chunkSize) % chunkSize;
         int newZ = (z + chunkSize) % chunkSize;
-        return neighborChunk.chunkData[newX, y, newZ].isSolid();
+        return neighborChunk.chunkData[newX, y, newZ].ObstructsFace(isWaterCalling);
     }
 }

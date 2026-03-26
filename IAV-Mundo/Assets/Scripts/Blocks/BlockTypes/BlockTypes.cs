@@ -19,9 +19,12 @@ public class BlockTypes
     .WithFaceTexture(Block.CubeFace.Bottom, new(0, 208)));
     public static BlockType SAND = registerBlock("sand", new BlockType(new(0, 176)));
     public static BlockType DEEPSLATE = registerBlock("deepslate", new BlockType(new(128, 128)));
+    public static BlockType WATER = registerBlock("water", new WaterBlockType(new(224, 192)));
+    public static BlockType FULL_WATER = registerBlock("full_water", new BlockType(new(224, 192)));
 
     public static BlockType registerBlock(String blockId, BlockType type)
     {
+        type.WithId(blockId);
         BLOCKS_TYPES.Add(blockId, type);
         return type;
     }

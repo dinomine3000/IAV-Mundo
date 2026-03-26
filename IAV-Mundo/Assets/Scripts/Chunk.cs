@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -64,14 +65,15 @@ public class Chunk : MonoBehaviour
             int blockX = x + worldOffset.x*chunkSize; 
             int blockZ = z + worldOffset.y*chunkSize; 
         
-            float heightNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence), 0.3f);
-            float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.001f), 1.5f);
-            float mountains = NoiseUtil.FBm(blockX, blockZ, 2, 0.005f);
+            float heightNoise = NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence);
+            float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.5f);
+            float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.005f), 0.5f);
+            oceanNoise = (float)math.atan((oceanNoise - 0.65)/0.02f) * (1/math.PI + 0.01f) + 0.5f;
+            oceanNoise = math.clamp(oceanNoise, 0, 1);
 
-            float terrainHeight = (
-                heightNoise * chunkHeight
-                - (1-oceanNoise) * 20
-                );
+            float terrainHeight = maxSolidHeight 
+            + 20 * oceanNoise
+            + oceanNoise * (20 * heightNoise);
 
             int surfaceBlockCount = 0;
             for(int y = chunkHeight - 1; y >= 0; y--)
@@ -82,7 +84,7 @@ public class Chunk : MonoBehaviour
                 bool solid = y < terrainHeight;
 
                 //cave  
-                if(solid && y > 1 && y < maxSolidHeight)
+                if(solid && y > 1 && surfaceBlockCount >= math.floor(4*caveOpeningNoise))
                     {
                         float cx = blockX * caveScale;
                         float cy = y * caveScale;
@@ -104,7 +106,8 @@ public class Chunk : MonoBehaviour
                     type = BlockTypes.STONE;  
                     if(surfaceBlockCount == 0)
                     {
-                        if(y > 6) type = BlockTypes.GRASS;
+                        if(y > 40) type = BlockTypes.GRASS;
+                        else type = BlockTypes.SAND;
                         surfaceBlockCount++;  
                     } 
                     
@@ -113,6 +116,12 @@ public class Chunk : MonoBehaviour
                         type = BlockTypes.DIRT;  
                     if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.GRASS) 
                         type = BlockTypes.DIRT;   
+                        
+                    //if its right below sand, paint sand.
+                    if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.SAND) 
+                        type = BlockTypes.SANDSTONE;  
+                    if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.SAND) 
+                        type = BlockTypes.SANDSTONE;   
                     
                     if(surfaceBlockCount > 16 || y < 3) type = BlockTypes.DEEPSLATE;
                     

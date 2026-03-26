@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 
 public class WaterBlockType : BlockType
 {
-    public WaterBlockType(Vector2Int uvPos) : base(uvPos, isSolid: true, customMesh: true)
+    public WaterBlockType(Vector2Int uvPos) : base(uvPos, isSolid: true, customMesh: true, defaultTransparency: true)
     {}
 
     static readonly Vector3 v0 = new Vector3(0.5f, -0.5f, 0.5f);
@@ -39,15 +39,14 @@ public class WaterBlockType : BlockType
             0 + vertexIndex, 1 + vertexIndex, 2 + vertexIndex, 
             1 + vertexIndex, 3 + vertexIndex, 2 + vertexIndex
         });
-        //uvs.AddRange(new List<Vector2>{new(0, 1), new(1, 1), new(0, 0), new(1, 0)});
         uvs.AddRange(GetUVs(face));
     }
     
     public static readonly float BLOCK_TEX_WIDTH = 16f;
-    public static readonly float BLOCK_TEX_HEIGHT = 16f;
+    public static readonly float BLOCK_TEX_HEIGHT = 12f;
     public Vector2[] GetUVs(Block.CubeFace face)
     {
-        Vector2 ltc = new(224, 192);
+        Vector2 ltc = GetUvTLC(face);
 
         //até agora, conta-se as coordenadas de cima para baixo. a partir de agora, conta-se de baixo para cima
         //de "y sobe para baixo" para "y sobe para cima"

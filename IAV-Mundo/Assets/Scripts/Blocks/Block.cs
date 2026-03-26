@@ -50,6 +50,8 @@ public class Block
         this.type = type;
     }
 
+    public bool IsFaceTransparent(CubeFace face){ return type.IsFaceTransparent(face);}
+
     public bool isSolid(){return type.isSolid;}
 
     public bool ObstructsFace(bool isWaterCalling){return (!IsWater() && isSolid()) || (IsWater() && isWaterCalling);}

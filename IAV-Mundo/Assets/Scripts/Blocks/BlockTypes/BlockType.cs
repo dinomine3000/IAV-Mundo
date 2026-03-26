@@ -13,13 +13,21 @@ public class BlockType
     public bool HasSingleFace(){return singleFace;}
 
     protected Dictionary<Block.CubeFace, Vector2Int> uvCoords = new Dictionary<Block.CubeFace, Vector2Int>();
+    protected Dictionary<Block.CubeFace, bool> faceTransparency = new Dictionary<Block.CubeFace, bool>();
 
-    public BlockType(Vector2Int uvCoords, bool isSolid = true, bool customMesh = false, bool singleFace = false)
+    public BlockType(Vector2Int uvCoords, bool isSolid = true, bool customMesh = false, bool singleFace = false, bool defaultTransparency = false)
     {
         this.uvCoords[Block.CubeFace.ALL] = uvCoords;
+        faceTransparency[Block.CubeFace.ALL] = defaultTransparency;
         this.isSolid = isSolid;
         this.customMesh = customMesh;
         this.singleFace = singleFace;
+    }
+
+    public bool IsFaceTransparent(Block.CubeFace face)
+    {
+        if(faceTransparency.ContainsKey(face)) return faceTransparency[face];
+        return faceTransparency[Block.CubeFace.ALL];
     }
 
     public BlockType WithId(String id)
@@ -35,6 +43,11 @@ public class BlockType
     public BlockType WithFaceTexture(Block.CubeFace face, Vector2Int uvCoords)
     {
         this.uvCoords[face] = uvCoords;
+        return this;
+    }    
+    public BlockType WithFaceTransparency(Block.CubeFace face, bool transparency)
+    {
+        faceTransparency[face] = transparency;
         return this;
     }    
 

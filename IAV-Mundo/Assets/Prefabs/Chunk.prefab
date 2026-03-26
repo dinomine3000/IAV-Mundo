@@ -104,6 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   chunkHeight: 16
+  waterLevel: 35
+  vegetationThreshold: 0.5
   chunkMaterial: {fileID: 0}
   caveScale: 0.1
   caveThreshold: 0.56

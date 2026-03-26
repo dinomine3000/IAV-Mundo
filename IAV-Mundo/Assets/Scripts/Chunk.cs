@@ -10,6 +10,7 @@ public class Chunk : MonoBehaviour
     public int chunkHeight = 16;
     public Block[,,] chunkData;
     public int waterLevel = 35;
+    public float vegetationThreshold = 0.3f;
     public Material chunkMaterial;
     [Header("Cave Config")]
     public float caveScale = 0.1f;
@@ -27,7 +28,6 @@ public class Chunk : MonoBehaviour
     private int octaves = 1;
 
     private float persistence = 0.5f;
-
     private float densityScale = 0.1f;
     private float densityThreshold = 0f;
     private int maxSolidHeight = 12;
@@ -69,12 +69,14 @@ public class Chunk : MonoBehaviour
             float heightNoise = NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence);
             float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.5f);
             float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.005f), 0.5f);
+            float vegetationNoise = NoiseUtil.FBm(blockX, blockZ, 2, 0.5f);
+
             oceanNoise = (float)math.atan((oceanNoise - 0.65)/0.02f) * (1/math.PI + 0.01f) + 0.5f;
             oceanNoise = math.clamp(oceanNoise, 0, 1);
 
             float terrainHeight = maxSolidHeight 
-            + 20 * oceanNoise
-            + oceanNoise * (20 * heightNoise);
+            + oceanNoise * (20 * heightNoise)
+            + 20 * oceanNoise;
 
             int surfaceBlockCount = 0;
             for(int y = chunkHeight - 1; y >= 0; y--)
@@ -107,7 +109,16 @@ public class Chunk : MonoBehaviour
                     type = BlockTypes.STONE;  
                     if(surfaceBlockCount == 0)
                     {
-                        if(y > waterLevel + 2) type = BlockTypes.GRASS;
+                        if(y > waterLevel + 2)
+                        {
+                            type = BlockTypes.GRASS;
+                            if(vegetationNoise > vegetationThreshold
+                                && y < chunkHeight - 1 
+                                && chunkData[x, y+1, z].type.IsSameBlock(BlockTypes.AIR))
+                                {
+                                    chunkData[x, y+1, z].type = BlockTypes.TALL_GRASS;
+                                } 
+                        }
                         else type = BlockTypes.SAND;
                         surfaceBlockCount++;  
                     } 
@@ -192,6 +203,10 @@ public class Chunk : MonoBehaviour
         List<Vector3> vertices = new();
         List<int> triangles = new();
         List<Vector2> uvs = new();
+        
+        List<Vector3> transparentVertices = new();
+        List<int> transparentTriangles = new();
+        List<Vector2> transparentUvs = new();
 
         // 2 - para cada bloco, adicionar todas as faces
         for(int x = 0; x < chunkSize; x++)
@@ -201,22 +216,41 @@ public class Chunk : MonoBehaviour
             Block block = chunkData[x, y, z];
             if(!block.isSolid())
                 {
-                    block.AddNonSolidFaceToMesh(vertices, triangles, uvs);
+                    if(block.IsFaceTransparent(Block.CubeFace.ALL)) block.AddNonSolidFaceToMesh(transparentVertices, transparentTriangles, transparentUvs);
+                    else block.AddNonSolidFaceToMesh(vertices, triangles, uvs);
                     continue;   
                 }
             
             if(!HasSolidNeighbour(x, y, z + 1, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Front, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Front)) block.AddSolidFaceToMesh(Block.CubeFace.Front, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Front, vertices, triangles, uvs);
+            }
             if(!HasSolidNeighbour(x, y, z - 1, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Back, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Back)) block.AddSolidFaceToMesh(Block.CubeFace.Back, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Back, vertices, triangles, uvs);
+            }
             if(!HasSolidNeighbour(x, y + 1, z, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Top, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Top)) block.AddSolidFaceToMesh(Block.CubeFace.Top, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Top, vertices, triangles, uvs);
+            }
             if(!HasSolidNeighbour(x, y - 1, z, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Bottom, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Bottom)) block.AddSolidFaceToMesh(Block.CubeFace.Bottom, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Bottom, vertices, triangles, uvs);
+            }
             if(!HasSolidNeighbour(x - 1, y, z, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Left, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Left)) block.AddSolidFaceToMesh(Block.CubeFace.Left, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Left, vertices, triangles, uvs);
+            }
             if(!HasSolidNeighbour(x + 1, y, z, block.IsWater()))
-                block.AddSolidFaceToMesh(Block.CubeFace.Right, vertices, triangles, uvs);
+            {
+                if(block.IsFaceTransparent(Block.CubeFace.Right)) block.AddSolidFaceToMesh(Block.CubeFace.Right, transparentVertices, transparentTriangles, transparentUvs);       
+                else block.AddSolidFaceToMesh(Block.CubeFace.Right, vertices, triangles, uvs);
+            }
         }   
 
         // 3 - criar mesh e atribuir arrays
@@ -226,15 +260,41 @@ public class Chunk : MonoBehaviour
             triangles = triangles.ToArray(),
             uv = uvs.ToArray()
         };
+        Mesh transparentMesh = new()
+        {
+            vertices = transparentVertices.ToArray(),
+            triangles = transparentTriangles.ToArray(),
+            uv = transparentUvs.ToArray()
+        };
 
         // 4 - recalcular normals e bounds
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
+        transparentMesh.RecalculateNormals();
+        transparentMesh.RecalculateBounds();
 
         // 5 - atribuir ao mesh filter e renderer
         gameObject.GetOrAddComponent<MeshFilter>().mesh = mesh;
         gameObject.GetOrAddComponent<MeshRenderer>().material = chunkMaterial;
         gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+        GameObject childMesh;
+        if(transform.childCount == 0)
+        {
+            
+            childMesh = new GameObject("TransparentMesh");
+            childMesh.transform.SetParent(transform);
+            //reset local transform to align with the parent
+            childMesh.transform.localPosition = Vector3.zero;
+            childMesh.transform.localRotation = Quaternion.identity;
+        } else
+        {
+            childMesh = transform.Find("TransparentMesh").gameObject;
+        }
+        childMesh.GetOrAddComponent<MeshFilter>().mesh = transparentMesh;
+        childMesh.GetOrAddComponent<MeshRenderer>().material = chunkMaterial;
+        childMesh.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
     }
     
     bool HasSolidNeighbour(int x, int y, int z, bool isWaterCalling)

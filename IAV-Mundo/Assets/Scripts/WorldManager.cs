@@ -29,15 +29,16 @@ public class WorldManager : MonoBehaviour
 
     void Start()
     {
+        lastPlayerChunk = GetPlayerChunk();
         for (int cx = 0; cx < initialGridSize; cx++)
         for (int cz = 0; cz < initialGridSize; cz++)
         {
-            SpawnChunk(new Vector2Int(cx, cz));
+            SpawnChunk(new Vector2Int(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
         }
         for (int cx = 0; cx < initialGridSize; cx++)
         for (int cz = 0; cz < initialGridSize; cz++)
         {
-            Chunk chunk = GetChunk(new(cx, cz));
+            Chunk chunk = GetChunk(new(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
             if(chunk == null) continue;
             chunk.DrawChunk();
         }

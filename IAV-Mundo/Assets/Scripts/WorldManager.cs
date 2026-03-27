@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
@@ -19,8 +20,13 @@ public class WorldManager : MonoBehaviour
     public float scale = 0.05f;
     public float densityScale = 0.2f;
     public float densityThreshold = 0.1f;
-    public int maxSolidHeight = 12;
     public int initialGridSize = 5;
+    public int chunkHeight = 32;
+    public int maxSolidHeight = 12;
+    public int waterLevel = 35;
+    public int beachBreakHeight = 5;
+    public int baseTerrainHeight = 7;
+    public int mountainHeight = 25;
     private Coroutine buildRoutine;
     private Coroutine renderRoutine;
     private Dictionary<Vector2Int, GameObject> activeChunks = new();
@@ -28,10 +34,18 @@ public class WorldManager : MonoBehaviour
 
     void Start()
     {
+        lastPlayerChunk = GetPlayerChunk();
         for (int cx = 0; cx < initialGridSize; cx++)
         for (int cz = 0; cz < initialGridSize; cz++)
         {
-            SpawnChunk(new Vector2Int(cx, cz));
+            SpawnChunk(new Vector2Int(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
+        }
+        for (int cx = 0; cx < initialGridSize; cx++)
+        for (int cz = 0; cz < initialGridSize; cz++)
+        {
+            Chunk chunk = GetChunk(new(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
+            if(chunk == null) continue;
+            chunk.DrawChunk();
         }
     }
     void Update()
@@ -43,12 +57,14 @@ public class WorldManager : MonoBehaviour
             //UpdateChunks();
             if(buildRoutine != null)
                 StopCoroutine(buildRoutine);
-            RemoveDistantChunks(current);
-            buildRoutine = StartCoroutine(BuildChunks(GetNeededChunksNearestFirst(current)));
-
             if(renderRoutine != null)
                 StopCoroutine(renderRoutine);
-            renderRoutine = StartCoroutine(RenderChunks(GetNeededChunksNearestFirst(current)));   
+
+            RemoveDistantChunks(current);
+            List<Vector2Int> needed = GetNeededChunksNearestFirst(current);
+
+            buildRoutine = StartCoroutine(BuildChunks(needed));
+            renderRoutine = StartCoroutine(RenderChunks(new(needed)));   
         }
     }
     Vector2Int GetPlayerChunk()
@@ -69,16 +85,16 @@ public class WorldManager : MonoBehaviour
         }   
         return needed;
     }
-    HashSet<Vector2Int> GetNeededChunksNearestFirst(Vector2Int currentCenterChunk)
+    List<Vector2Int> GetNeededChunksNearestFirst(Vector2Int currentCenterChunk)
     {
-        HashSet<Vector2Int> needed = new HashSet<Vector2Int>();
+        List<Vector2Int> needed = new();
         Vector2Int center = currentCenterChunk;
         for(int i = 0; i <= renderDistance; i++)
         {
             for(int x = center.x - i; x <= center.x + i; x++)
             for(int z = center.y - i; z <= center.y + i; z++)
             {
-                Vector2Int vec = new Vector2Int(x, z);
+                Vector2Int vec = new(x, z);
                 if(!needed.Contains(vec))
                     needed.Add(vec);
             } 
@@ -91,8 +107,8 @@ public class WorldManager : MonoBehaviour
         HashSet<Vector2Int> toRemove = new HashSet<Vector2Int>();
         foreach(Vector2Int vec in activeChunks.Keys)
         {
-            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance 
-                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance ){
+            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance*2.5f
+                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance*2.5f ){
                 toRemove.Add(vec);
             }
         }
@@ -103,14 +119,38 @@ public class WorldManager : MonoBehaviour
         }   
     }
     
-    IEnumerator BuildChunks(HashSet<Vector2Int> chunksNeeded)
+    IEnumerator BuildChunks(List<Vector2Int> chunksNeeded)
     {
         int count = 0;
+        bool check = false;
         foreach (var coord in chunksNeeded)
         {
+         
             if (!activeChunks.ContainsKey(coord))
             {
                 SpawnChunk(coord);
+                check = true;
+            }   
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (x == 0 && y == 0) continue;
+                    if (x != 0 && y != 0) continue;
+
+                    Vector2Int adjCoord = new Vector2Int(coord.x + x, coord.y + y);
+
+                    // Check if this specific neighbor is needed and not already active
+                    if (chunksNeeded.Contains(adjCoord) && !activeChunks.ContainsKey(adjCoord))
+                    {
+                        SpawnChunk(adjCoord);
+                        check = true;
+                    }
+                }
+            }
+            if (check)
+            {
+                check = false;
                 if(++count % chunksGeneratedPerFrame == 0)
                 {
                     yield return null; //pausa ate o prox frame
@@ -119,7 +159,7 @@ public class WorldManager : MonoBehaviour
         }
     }
     
-    IEnumerator RenderChunks(HashSet<Vector2Int> chunksNeeded)
+    IEnumerator RenderChunks(List<Vector2Int> chunksNeeded)
     {
         int count = 0;
         foreach (var coord in chunksNeeded)
@@ -165,10 +205,9 @@ public class WorldManager : MonoBehaviour
         chunkObj.transform.position = new Vector3(chunkPos.x, 0, chunkPos.y);
         
         Chunk chunk = chunkObj.GetComponent<Chunk>();
-        chunk.Setup(scale, octaves, persistence, densityScale, densityThreshold, maxSolidHeight);
-        chunk.Initialize(coord, chunkMaterial, this);
-        chunk.CarveChunk();
-        chunk.PaintChunk();
+        
+        chunk.Setup(scale, octaves, persistence, maxSolidHeight, chunkHeight, waterLevel, mountainHeight, baseTerrainHeight, beachBreakHeight);
+        chunk.Initialize(new(coord.x, coord.y), chunkMaterial, this);
         // TODO: Registar no Dictionary activeChunks
         activeChunks.Add(coord, chunkObj);
     }

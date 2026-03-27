@@ -1,15 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TallGrassBlockType : BlockType
 {
-    public TallGrassBlockType() : base(new(0, 0))
+    public TallGrassBlockType(Vector2Int uvCoords) : base(uvCoords, false, true, true, defaultTransparency: true)
     {}
 
 
     //TODO
-    public void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
+    public override void AddCustomFaceToMesh(Block.CubeFace face, List<Vector3> vertices, List<int> triangles, List<Vector2> uvs, Vector3 position)
     {        
+        if(face != Block.CubeFace.ALL) return;
         /*int vertexIndex = vertices.Count;
         List<Vector3> faceVerts = Block.FaceVerticesMap[face];
         List<Vector3> worldVerts = faceVerts.Select(v => v + position).ToList();
@@ -19,42 +21,44 @@ public class TallGrassBlockType : BlockType
             0 + vertexIndex, 1 + vertexIndex, 2 + vertexIndex, 
             1 + vertexIndex, 3 + vertexIndex, 2 + vertexIndex
         });
-        //uvs.AddRange(new List<Vector2>{new(0, 1), new(1, 1), new(0, 0), new(1, 0)});
-        uvs.AddRange(GetUVs(face, type));*/
+        uvs.AddRange(Block.GetUVs(face, this));*/
+        AddCrossQuadToMesh(Block.CubeFace.Front, vertices, triangles, uvs, position);
+        //AddCrossQuadToMesh(Block.CubeFace.Back, vertices, triangles, uvs, position);
+        AddCrossQuadToMesh(Block.CubeFace.Left, vertices, triangles, uvs, position);
+        //AddCrossQuadToMesh(Block.CubeFace.Right, vertices, triangles, uvs, position);
     }
 
-    public static List<int> GetCrossBlockTriangles(int startIndex)
+    private void AddCrossQuadToMesh(Block.CubeFace face, 
+        List<Vector3> vertices, List<int> triangles, List<Vector2> uvs, Vector3 position)
     {
-        List<int> tris = new();
+        if(face == Block.CubeFace.ALL || face == Block.CubeFace.Top || face == Block.CubeFace.Bottom) return;
+        int vertexIndex = vertices.Count;
 
-        // Quad A (v5, v3, v1, v7)
-        int a = startIndex + 0;
-        int b = startIndex + 1;
-        int c = startIndex + 2;
-        int d = startIndex + 3;
+        // First Diagonal: v6 (Top-Left) to v4 (Top-Right) / v2 (Bottom-Left) to v0 (Bottom-Right)
+        // Second Diagonal: v7 (Top-Left) to v5 (Top-Right) / v3 (Bottom-Left) to v1 (Bottom-Right)
+        List<Vector3> faceVerts = 
+            face == Block.CubeFace.Front || face == Block.CubeFace.Back 
+            ? new List<Vector3> { Block.v6, Block.v4, Block.v2, Block.v0 } 
+            : new List<Vector3> { Block.v7, Block.v5, Block.v3, Block.v1 };
 
-        // Front
-        tris.Add(a); tris.Add(b); tris.Add(c);
-        tris.Add(c); tris.Add(b); tris.Add(d);
+        List<Vector3> worldVerts = faceVerts.Select(v => v + position).ToList();
+        vertices.AddRange(worldVerts);
 
-        // Back (reverse winding)
-        tris.Add(c); tris.Add(b); tris.Add(a);
-        tris.Add(d); tris.Add(b); tris.Add(c);
+        // Side 1 (Forward)
+        triangles.AddRange(new List<int>
+        {
+            0 + vertexIndex, 1 + vertexIndex, 2 + vertexIndex,
+            1 + vertexIndex, 3 + vertexIndex, 2 + vertexIndex
+        });
 
-        // Quad B (v4, v2, v0, v6)
-        int e = startIndex + 4;
-        int f = startIndex + 5;
-        int g = startIndex + 6;
-        int h = startIndex + 7;
+        // Side 2 (Backward) - Reversed winding order to render the back face
+        triangles.AddRange(new List<int>
+        {
+            2 + vertexIndex, 1 + vertexIndex, 0 + vertexIndex,
+            2 + vertexIndex, 3 + vertexIndex, 1 + vertexIndex
+        });
 
-        // Front
-        tris.Add(e); tris.Add(f); tris.Add(g);
-        tris.Add(g); tris.Add(f); tris.Add(h);
-
-        // Back
-        tris.Add(g); tris.Add(f); tris.Add(e);
-        tris.Add(h); tris.Add(f); tris.Add(g);
-
-        return tris;
+        // Use a specific face index or type for UV mapping
+        uvs.AddRange(Block.GetUVs(face, this));
     }
 }

@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a26439c567d1a9a4db47cf9033352309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  speed: 10
+  speed: 25
   playerCamera: {fileID: 330585546}
   mouseSensitivity: 20
 --- !u!136 &420915235
@@ -509,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 420915233}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: -114.5, y: 66.6, z: 281.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2074,16 +2074,21 @@ MonoBehaviour:
   player: {fileID: 420915238}
   chunkPrefab: {fileID: 8665471304940420666, guid: 825c81d0975608344b33fd54f2344120, type: 3}
   chunkMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
-  renderDistance: 3
-  chunksGeneratedPerFrame: 2
-  chunksRenderedPerFrame: 5
-  octaves: 6
+  renderDistance: 5
+  chunksGeneratedPerFrame: 4
+  chunksRenderedPerFrame: 2
+  octaves: 4
   persistence: 0.3
-  scale: 0.05
+  scale: 0.03
   densityScale: 0.2
   densityThreshold: 0.1
-  maxSolidHeight: 12
   initialGridSize: 5
+  chunkHeight: 64
+  maxSolidHeight: 10
+  waterLevel: 25
+  beachBreakHeight: 5
+  baseTerrainHeight: 3
+  mountainHeight: 35
 --- !u!4 &2140951847
 Transform:
   m_ObjectHideFlags: 0

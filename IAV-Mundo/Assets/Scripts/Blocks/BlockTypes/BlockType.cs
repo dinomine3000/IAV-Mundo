@@ -5,6 +5,7 @@ public class BlockType
 {
 
     public bool isSolid;
+    private string id;
     private Dictionary<Block.CubeFace, Vector2Int> uvCoords = new Dictionary<Block.CubeFace, Vector2Int>();
 
     public BlockType(Vector2Int uvCoords, bool isSolid = true)
@@ -22,6 +23,14 @@ public class BlockType
 
     public void AddNonSolidFaceToMesh(List<Vector3> vertices, List<int> triangles, List<Vector2> uvs)
     {}
+
+    public string GetId(){return id;}
+
+    public BlockType WithId(string id)
+    {
+        this.id = id;
+        return this;
+    }
 
     public Vector2Int GetUvTLC(Block.CubeFace face)
     {

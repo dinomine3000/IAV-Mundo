@@ -13,10 +13,17 @@ public class BlockInteraction : MonoBehaviour
     public Image hotbar;
     private Image slots;
 
+    private int layerMask;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
+    }
+    
+    void Awake()
+    {
+        layerMask = LayerMask.GetMask("ChunkBlocks");
     }
 
     // Update is called once per frame
@@ -34,7 +41,7 @@ public class BlockInteraction : MonoBehaviour
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, layerMask))
         {
             ModifyBlock(hit.point - hit.normal * 0.5f, BlockTypes.AIR);
         }
@@ -50,9 +57,9 @@ public class BlockInteraction : MonoBehaviour
     {
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, layerMask))
         {
-            ModifyBlock(hit.point - hit.normal * 0.5f, placeType);
+            ModifyBlock(hit.point + hit.normal * 0.5f, placeType);
         }
     }
 
@@ -79,7 +86,6 @@ public class BlockInteraction : MonoBehaviour
                 localZ < 0 || localZ >= cs) return;
 
         Block block = chunk.chunkData[localX, localY, localZ];
-        if ((block.type != BlockTypes.AIR) && type != BlockTypes.AIR) return;
         block.type = type;
         block.isSolid = (type != BlockTypes.AIR);
 

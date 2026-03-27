@@ -30,16 +30,16 @@ public class PlayerController : MonoBehaviour
         if (Keyboard.current.dKey.isPressed) input += Vector3.right;
         if (Keyboard.current.wKey.isPressed) input += Vector3.forward;
         if (Keyboard.current.sKey.isPressed) input += Vector3.back;
-        if (Mouse.current.scroll.up.IsPressed()) input += Vector3.up;
-        if (Mouse.current.scroll.down.IsPressed()) input += Vector3.down;
+        if (Keyboard.current.spaceKey.isPressed) input += Vector3.up;
+        if (Keyboard.current.shiftKey.isPressed) input += Vector3.down;
         transform.Translate(input * Time.deltaTime * speed);
     }
 
     void Rotation()
     {
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
-        float mouseX = mouseDelta.x * mouseSensitivity * Time.deltaTime;
-        float mouseY = mouseDelta.y * mouseSensitivity * Time.deltaTime;
+        float mouseX = mouseDelta.x * mouseSensitivity*0.03f;
+        float mouseY = mouseDelta.y * mouseSensitivity*0.03f;
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         playerCamera.localRotation = Quaternion.Euler(xRotation, 0f, 0f);

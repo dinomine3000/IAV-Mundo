@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3787239361839555367}
   - component: {fileID: 7463224761396690760}
   - component: {fileID: 3345707501017055759}
-  m_Layer: 0
+  - component: {fileID: 3126751752983922727}
+  m_Layer: 3
   m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,3 +114,25 @@ MonoBehaviour:
   wormDirectionScale: 2
   worldManager: {fileID: 0}
   worldOffset: {x: 0, y: 0}
+--- !u!64 &3126751752983922727
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665471304940420666}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}

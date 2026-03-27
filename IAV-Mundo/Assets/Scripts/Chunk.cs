@@ -274,6 +274,7 @@ public class Chunk : MonoBehaviour
         // 5 - atribuir ao mesh filter e renderer
         gameObject.GetOrAddComponent<MeshFilter>().mesh = mesh;
         gameObject.GetOrAddComponent<MeshRenderer>().material = chunkMaterial;
+        gameObject.GetOrAddComponent<MeshCollider>().sharedMesh = mesh;
         gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
     }
     

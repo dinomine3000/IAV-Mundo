@@ -18,6 +18,7 @@ public class BlockTypes
 
     public static BlockType registerBlock(String blockId, BlockType type)
     {
+        type.WithId(blockId);
         BLOCKS_TYPES.Add(blockId, type);
         return type;
     }

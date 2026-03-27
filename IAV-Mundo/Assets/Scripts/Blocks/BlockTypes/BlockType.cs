@@ -8,7 +8,7 @@ public class BlockType
     public bool isSolid;
     private bool customMesh;
     private bool singleFace;
-    private String blockId;
+    private string blockId;
     public bool HasCustomMesh(){return customMesh;}
     public bool HasSingleFace(){return singleFace;}
 

@@ -104,15 +104,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   chunkHeight: 16
-  waterLevel: 30
+  waterLevel: 25
+  mountainHeight: 30
+  baseTerrainHeight: 3
   vegetationThreshold: 0.5
   chunkMaterial: {fileID: 0}
   caveScale: 0.1
   caveThreshold: 0.56
   caveSurfaceProtectionMargin: 4
-  wormSteps: 3
-  wormRadius: 3
-  wormStepSize: 2
-  wormDirectionScale: 2
   worldManager: {fileID: 0}
   worldOffset: {x: 0, y: 0}

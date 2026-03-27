@@ -10,27 +10,21 @@ public class Chunk : MonoBehaviour
     public int chunkHeight = 16;
     public Block[,,] chunkData;
     public int waterLevel = 35;
+    public int mountainHeight = 25;
+    public int baseTerrainHeight = 7;
+    public int beachBreakHeight = 5;
+    private int maxSolidHeight = 12;
     public float vegetationThreshold = 0.3f;
     public Material chunkMaterial;
     [Header("Cave Config")]
     public float caveScale = 0.1f;
     public float caveThreshold = 0.65f;
     public int caveSurfaceProtectionMargin = 4;
-    [Header("Cave Worm Config")]
-
-    public int wormSteps = 5;
-    public float wormRadius = 4;
-    public float wormStepSize = 2f;
-    public float wormDirectionScale = 2f;
-
     private float scale = 0.05f;
 
     private int octaves = 1;
 
     private float persistence = 0.5f;
-    private float densityScale = 0.1f;
-    private float densityThreshold = 0f;
-    private int maxSolidHeight = 12;
 
     public WorldManager worldManager;
 
@@ -45,15 +39,18 @@ public class Chunk : MonoBehaviour
 
     }
 
-    public void Setup(float scale, int octaves, float persistence, float densityScale, float densityThreshold, int maxSolidHeight, int chunkHeight)
+    public void Setup(float scale, int octaves, float persistence, 
+    int maxSolidHeight, int chunkHeight, int waterLevel, int mountainHeight, int baseTerrainHeight, int beachBreakHeight)
     {
         this.octaves = octaves;
         this.scale = scale;
         this.persistence = persistence;
-        this.densityScale = densityScale;
-        this.densityThreshold = densityThreshold;
         this.maxSolidHeight = maxSolidHeight;
         this.chunkHeight = chunkHeight;
+        this.waterLevel = waterLevel;
+        this.mountainHeight = mountainHeight;
+        this.baseTerrainHeight = baseTerrainHeight;
+        this.beachBreakHeight = beachBreakHeight;
     }
 
     void InitializeChunk()
@@ -69,14 +66,17 @@ public class Chunk : MonoBehaviour
             float heightNoise = NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence);
             float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.5f);
             float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.005f), 0.5f);
+            float mountainNoise = Mathf.Pow(NoiseUtil.FBm(blockX + 525, blockZ - 240, 2, 0.005f), 0.5f);
             float vegetationNoise = NoiseUtil.FBm(blockX, blockZ, 2, 0.5f);
 
             oceanNoise = (float)math.atan((oceanNoise - 0.65)/0.02f) * (1/math.PI + 0.01f) + 0.5f;
             oceanNoise = math.clamp(oceanNoise, 0, 1);
+            mountainNoise = (float)math.atan((mountainNoise - 0.7)/0.01f) * (1/math.PI + 0f) + 0.5f;
+            mountainNoise = math.clamp(mountainNoise, 0, 1);
 
             float terrainHeight = maxSolidHeight 
-            + oceanNoise * (20 * heightNoise)
-            + 20 * oceanNoise;
+            + oceanNoise * (baseTerrainHeight * heightNoise + (mountainHeight - baseTerrainHeight)*heightNoise*mountainNoise)
+            + (waterLevel - maxSolidHeight + beachBreakHeight) * oceanNoise;
 
             int surfaceBlockCount = 0;
             for(int y = chunkHeight - 1; y >= 0; y--)

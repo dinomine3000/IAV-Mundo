@@ -56,14 +56,6 @@ public class BlockType
         Debug.Log("Warning: Entered method AddCustomFaceToMesh() on super type, but it does nothing");
     }
 
-    public string GetId(){return id;}
-
-    public BlockType WithId(string id)
-    {
-        this.id = id;
-        return this;
-    }
-
     public Vector2Int GetUvTLC(Block.CubeFace face)
     {
         if(uvCoords.ContainsKey(face)) return uvCoords[face];

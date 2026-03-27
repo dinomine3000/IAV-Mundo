@@ -65,6 +65,7 @@ public class BlockInteraction : MonoBehaviour
 
     void ModifyBlock(Vector3 worldPos, BlockType type)
     {
+        Debug.Log("WorldPos: " + worldPos);
         int cs = Chunk.chunkSize;
         int bx = Mathf.RoundToInt(worldPos.x);
         int by = Mathf.RoundToInt(worldPos.y);
@@ -81,13 +82,14 @@ public class BlockInteraction : MonoBehaviour
         int localY = by;
         int localZ = bz - chunkCoord.y * cs;
 
+        Debug.Log("LocalPos: " + new Vector3(localX, localY, localZ));
         if (localX < 0 || localX >= cs ||
-                localY < 1 || localY >= cs ||
+                localY < 1 || localY >= chunk.chunkHeight ||
                 localZ < 0 || localZ >= cs) return;
 
         Block block = chunk.chunkData[localX, localY, localZ];
         block.type = type;
-        block.isSolid = (type != BlockTypes.AIR);
+        Debug.Log("Type: " +type.GetId());
 
         chunk.DrawChunk();
 
@@ -102,5 +104,7 @@ public class BlockInteraction : MonoBehaviour
         if (Keyboard.current.digit1Key.isPressed) placeType = BlockTypes.STONE;
         if (Keyboard.current.digit2Key.isPressed) placeType = BlockTypes.DIRT;
         if (Keyboard.current.digit3Key.isPressed) placeType = BlockTypes.DEEPSLATE;
+        if (Keyboard.current.digit4Key.isPressed) placeType = BlockTypes.SAND;
+        if (Keyboard.current.digit5Key.isPressed) placeType = BlockTypes.GRASS;
     }
 }

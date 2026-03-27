@@ -44,6 +44,9 @@ public class BlockInteraction : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, layerMask))
         {
             ModifyBlock(hit.point - hit.normal * 0.5f, BlockTypes.AIR);
+        } else
+        {
+            ModifyBlock(Camera.main.transform.position, BlockTypes.AIR);
         }
     }
 
@@ -88,8 +91,9 @@ public class BlockInteraction : MonoBehaviour
                 localZ < 0 || localZ >= cs) return;
 
         Block block = chunk.chunkData[localX, localY, localZ];
-        block.type = type;
         Debug.Log("Type: " +type.GetId());
+        if(type.IsSameBlock(BlockTypes.AIR) && type.IsSameBlock(block.type)) return;
+        block.type = type;
 
         chunk.DrawChunk();
 

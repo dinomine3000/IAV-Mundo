@@ -2085,10 +2085,10 @@ MonoBehaviour:
   initialGridSize: 5
   chunkHeight: 64
   maxSolidHeight: 10
-  waterLevel: 35
+  waterLevel: 25
   beachBreakHeight: 5
-  baseTerrainHeight: 7
-  mountainHeight: 25
+  baseTerrainHeight: 3
+  mountainHeight: 35
 --- !u!4 &2140951847
 Transform:
   m_ObjectHideFlags: 0

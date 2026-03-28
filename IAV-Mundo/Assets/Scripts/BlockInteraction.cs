@@ -10,9 +10,6 @@ public class BlockInteraction : MonoBehaviour
 
     public BlockType placeType = BlockTypes.STONE;
 
-    public Image hotbar;
-    private Image slots;
-
     private int layerMask;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,7 +31,6 @@ public class BlockInteraction : MonoBehaviour
             BreakBlock();
         if (Mouse.current.rightButton.wasPressedThisFrame)
             PlaceBlock();
-        changePlaceType();
     }
 
     void BreakBlock()
@@ -103,12 +99,8 @@ public class BlockInteraction : MonoBehaviour
         if (localZ == cs - 1) RedrawNeighbour(chunkCoord + Vector2Int.up);
     }
 
-    void changePlaceType()
+    public void changePlaceType(BlockType blockType)
     {
-        if (Keyboard.current.digit1Key.isPressed) placeType = BlockTypes.STONE;
-        if (Keyboard.current.digit2Key.isPressed) placeType = BlockTypes.DIRT;
-        if (Keyboard.current.digit3Key.isPressed) placeType = BlockTypes.DEEPSLATE;
-        if (Keyboard.current.digit4Key.isPressed) placeType = BlockTypes.SAND;
-        if (Keyboard.current.digit5Key.isPressed) placeType = BlockTypes.GRASS;
+        placeType = blockType;
     }
 }

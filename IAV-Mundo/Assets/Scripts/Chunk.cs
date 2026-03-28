@@ -18,7 +18,8 @@ public class Chunk : MonoBehaviour
     public Material chunkMaterial;
     [Header("Cave Config")]
     public float caveScale = 0.1f;
-    public float caveThreshold = 0.65f;
+    public float caveMinThreshold = 0.65f;
+    public float caveMaxThreshold = 0.35f;
     public int caveSurfaceProtectionMargin = 4;
     private float scale = 0.05f;
 
@@ -28,6 +29,8 @@ public class Chunk : MonoBehaviour
 
     public WorldManager worldManager;
 
+    private Dictionary<Vector3Int, BlockType> savedData = null;
+
     public Vector2Int worldOffset; // coordenada do chunk no mundo (em chunks)
     public void Initialize(Vector2Int offset, Material mat, WorldManager manager)
     {
@@ -35,8 +38,26 @@ public class Chunk : MonoBehaviour
         chunkMaterial = mat;
         worldManager = manager;
         InitializeChunk(); // usa worldOffset para coordenadas globais
+        LoadData();
         //DrawChunk();
 
+    }
+
+    public void SetSavedData(Dictionary<Vector3Int, BlockType> data)
+    {
+        savedData = data;
+    }
+
+    public Dictionary<Vector3Int, BlockType> GetSavedData()
+    {
+        return savedData;
+    }
+
+    public void ChangeBlock(Vector3Int coord, BlockType type)
+    {
+        if(savedData == null) savedData = new();
+        chunkData[coord.x, coord.y, coord.z].type = type;
+        savedData[coord] = type;
     }
 
     public void Setup(float scale, int octaves, float persistence, 
@@ -64,7 +85,7 @@ public class Chunk : MonoBehaviour
             int blockZ = z + worldOffset.y*chunkSize; 
         
             float heightNoise = NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence);
-            float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.5f);
+            float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.2f);
             float oceanNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.005f), 0.5f);
             float mountainNoise = Mathf.Pow(NoiseUtil.FBm(blockX + 525, blockZ - 240, 2, 0.005f), 0.5f);
             float vegetationNoise = NoiseUtil.FBm(blockX, blockZ, 2, 0.5f);
@@ -87,14 +108,14 @@ public class Chunk : MonoBehaviour
                 bool solid = y < terrainHeight;
 
                 //cave  
-                if(solid && y > 1 && surfaceBlockCount >= math.floor(4*caveOpeningNoise))
+                if(solid && y > 1 && surfaceBlockCount >= math.floor(caveSurfaceProtectionMargin*(1-caveOpeningNoise)))
                     {
                         float cx = blockX * caveScale;
                         float cy = y * caveScale;
                         float cz = blockZ * caveScale;
 
                         float caveNoise = NoiseUtil.Perlin3D(cx, cy, cz);
-                        if(caveNoise > caveThreshold)
+                        if(caveNoise > caveMinThreshold && caveNoise < caveMaxThreshold)
                         {
                             solid = false;
                         }
@@ -109,7 +130,7 @@ public class Chunk : MonoBehaviour
                     type = BlockTypes.STONE;  
                     if(surfaceBlockCount == 0)
                     {
-                        if(y > waterLevel + 2)
+                        if(oceanNoise > 0.8)
                         {
                             type = BlockTypes.GRASS;
                             if(vegetationNoise > vegetationThreshold
@@ -137,7 +158,7 @@ public class Chunk : MonoBehaviour
                     
                     if(surfaceBlockCount > 16 || y < 3) type = BlockTypes.DEEPSLATE;
                     
-                } else if(surfaceBlockCount == 0 && y <= waterLevel)
+                } else if(surfaceBlockCount == 0 && y <= waterLevel && oceanNoise < 0.75)
                 {
                     type = BlockTypes.WATER;
                     if(y < chunkHeight - 1 && chunkData[x, y+1, z].IsWater()) 
@@ -146,6 +167,14 @@ public class Chunk : MonoBehaviour
                 if(y == 0) type = BlockTypes.BEDROCK;
                 chunkData[x, y, z] = new Block(type, new(x, y, z));
             } 
+        }
+    }
+    private void LoadData()
+    {
+        if(savedData == null) return;
+        foreach(Vector3Int blockPos in savedData.Keys)
+        {
+            chunkData[blockPos.x, blockPos.y, blockPos.z].type = savedData[blockPos];
         }
     }
     public void DrawChunk()

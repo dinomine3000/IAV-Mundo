@@ -30,6 +30,7 @@ public class WorldManager : MonoBehaviour
     private Coroutine buildRoutine;
     private Coroutine renderRoutine;
     private Dictionary<Vector2Int, GameObject> activeChunks = new();
+    private Dictionary<Vector2Int, Dictionary<Vector3Int, BlockType>> chunkSavedData = new(); 
     private Vector2Int lastPlayerChunk = new Vector2Int(int.MinValue, int.MinValue);
 
     void Start()
@@ -64,6 +65,7 @@ public class WorldManager : MonoBehaviour
             List<Vector2Int> needed = GetNeededChunksNearestFirst(current);
 
             buildRoutine = StartCoroutine(BuildChunks(needed));
+            //BuildAllChunks(needed);
             renderRoutine = StartCoroutine(RenderChunks(new(needed)));   
         }
     }
@@ -73,17 +75,6 @@ public class WorldManager : MonoBehaviour
         return new Vector2Int(
             Mathf.FloorToInt(pos.x / Chunk.chunkSize),
             Mathf.FloorToInt(pos.z / Chunk.chunkSize));
-    }
-    HashSet<Vector2Int> GetNeededChunks(Vector2Int currentCenterChunk)
-    {
-        HashSet<Vector2Int> needed = new HashSet<Vector2Int>();
-        Vector2Int center = currentCenterChunk;
-        for(int x = center.x - renderDistance; x <= center.x + renderDistance; x++)
-        for(int z = center.y - renderDistance; z <= center.y + renderDistance; z++)
-        {
-            needed.Add(new Vector2Int(x, z));
-        }   
-        return needed;
     }
     List<Vector2Int> GetNeededChunksNearestFirst(Vector2Int currentCenterChunk)
     {
@@ -114,6 +105,8 @@ public class WorldManager : MonoBehaviour
         }
         foreach(Vector2Int vec in toRemove)
         {
+            if(GetChunk(vec).GetSavedData() != null)
+                chunkSavedData[vec] = GetChunk(vec).GetSavedData();
             Destroy(activeChunks[vec]);
             activeChunks.Remove(vec);
         }   
@@ -175,28 +168,17 @@ public class WorldManager : MonoBehaviour
         }
     }
 
-    void UpdateChunks()
+    void BuildAllChunks(List<Vector2Int> chunksNeeded)
     {
-        // TODO: 1. Construir HashSet<Vector2Int> com os chunks necessarios
-        // (todos os (cx,cz) dentro de renderDistance do centro)
-        HashSet<Vector2Int> needed = GetNeededChunks(GetPlayerChunk());
-        // TODO: 2. Remover chunks que já não são necessarios
-        // Atenção: não modificar o Dictionary enquanto se itera!
-        // Sugestão: recolher as chaves a remover numa lista separada
-        RemoveDistantChunks(GetPlayerChunk());
-        // TODO: 3. Spawnar os chunks de 'needed' que ainda não existem
-        foreach(Vector2Int chunkPos in needed)
+        foreach (var coord in chunksNeeded)
         {
-            if(activeChunks.ContainsKey(chunkPos)) continue;
-            SpawnChunk(chunkPos);
-        }
-
-        //D.4 Desenhar todos os chunks
-        foreach(GameObject chunk in activeChunks.Values)
-        {
-            chunk.GetComponent<Chunk>().DrawChunk();
+            if (!activeChunks.ContainsKey(coord))
+            {
+                SpawnChunk(coord);
+            }   
         }
     }
+
 
     void SpawnChunk(Vector2Int coord)
     {
@@ -207,6 +189,8 @@ public class WorldManager : MonoBehaviour
         Chunk chunk = chunkObj.GetComponent<Chunk>();
         
         chunk.Setup(scale, octaves, persistence, maxSolidHeight, chunkHeight, waterLevel, mountainHeight, baseTerrainHeight, beachBreakHeight);
+        if(chunkSavedData.ContainsKey(coord))
+            chunk.SetSavedData(chunkSavedData[coord]);
         chunk.Initialize(new(coord.x, coord.y), chunkMaterial, this);
         // TODO: Registar no Dictionary activeChunks
         activeChunks.Add(coord, chunkObj);

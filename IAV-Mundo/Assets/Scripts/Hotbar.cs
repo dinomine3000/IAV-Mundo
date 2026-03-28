@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class Hotbar : MonoBehaviour
     private List<BlockType> itemOrder = new List<BlockType>();
     private Color selectedColor = Color.gray2;
     private Color normalColor = Color.white;
+    private int currentIdx = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -70,17 +72,31 @@ public class Hotbar : MonoBehaviour
     }
     void changeSlot()
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < itemOrder.Count; i++)
         {
             if (GetDigitPressed(i + 1))
             {
                 if (i < itemOrder.Count)
                 {
-                    blockInteraction.changePlaceType(itemOrder[i]);
-                    HighlightSlot(i);
+                    currentIdx = i;
+                    blockInteraction.changePlaceType(itemOrder[currentIdx]);
+                    HighlightSlot(currentIdx);
                 }
             }
         }
+        if(Mouse.current.scroll.ReadValue().y > 0)
+        {
+            currentIdx = (currentIdx + itemOrder.Count - 1) % itemOrder.Count;
+            blockInteraction.changePlaceType(itemOrder[currentIdx]);
+            HighlightSlot(currentIdx);
+            
+        } else if (Mouse.current.scroll.ReadValue().y < 0)
+        {
+            currentIdx = (currentIdx + 1) % itemOrder.Count;
+            blockInteraction.changePlaceType(itemOrder[currentIdx]);
+            HighlightSlot(currentIdx);
+        }
+        
     }
     bool GetDigitPressed(int digit)
     {

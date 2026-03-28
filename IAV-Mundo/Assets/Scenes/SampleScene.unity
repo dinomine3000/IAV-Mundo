@@ -510,7 +510,7 @@ Transform:
   m_GameObject: {fileID: 420915233}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 500, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1869,7 +1869,7 @@ MonoBehaviour:
   chunkPrefab: {fileID: 8665471304940420666, guid: 825c81d0975608344b33fd54f2344120, type: 3}
   chunkMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
   renderDistance: 5
-  chunksGeneratedPerFrame: 4
+  chunksGeneratedPerFrame: 2
   chunksRenderedPerFrame: 2
   octaves: 4
   persistence: 0.3

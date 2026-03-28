@@ -108,10 +108,12 @@ MonoBehaviour:
   waterLevel: 25
   mountainHeight: 30
   baseTerrainHeight: 3
+  beachBreakHeight: 5
   vegetationThreshold: 0.5
   chunkMaterial: {fileID: 0}
   caveScale: 0.1
-  caveThreshold: 0.56
+  caveMinThreshold: 0.47
+  caveMaxThreshold: 0.53
   caveSurfaceProtectionMargin: 4
   worldManager: {fileID: 0}
   worldOffset: {x: 0, y: 0}

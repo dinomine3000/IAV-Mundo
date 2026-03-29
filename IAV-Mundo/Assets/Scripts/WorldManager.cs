@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 public class WorldManager : MonoBehaviour
@@ -36,13 +37,19 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         lastPlayerChunk = GetPlayerChunk();
-        for (int cx = 0; cx < initialGridSize; cx++)
-        for (int cz = 0; cz < initialGridSize; cz++)
+        float diff = (initialGridSize - 1)/2f;
+        int min = -Mathf.FloorToInt(diff);
+        int max = Mathf.CeilToInt(diff);
+
+        for (int cx = min; cx < max; cx++)
+        for (int cz = min; cz < max; cz++)
         {
-            SpawnChunk(new Vector2Int(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
+            Vector2Int coord = new(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz);
+            SpawnChunk(coord);
+            GenerateNeighborChunks(coord);
         }
-        for (int cx = 0; cx < initialGridSize; cx++)
-        for (int cz = 0; cz < initialGridSize; cz++)
+        for (int cx = min; cx < max; cx++)
+        for (int cz = min; cz < max; cz++)
         {
             Chunk chunk = GetChunk(new(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
             if(chunk == null) continue;
@@ -66,7 +73,7 @@ public class WorldManager : MonoBehaviour
 
             buildRoutine = StartCoroutine(BuildChunks(needed));
             //BuildAllChunks(needed);
-            renderRoutine = StartCoroutine(RenderChunks(new(needed)));   
+            renderRoutine = StartCoroutine(RenderChunks(needed));   
         }
     }
     Vector2Int GetPlayerChunk()
@@ -119,28 +126,9 @@ public class WorldManager : MonoBehaviour
         foreach (var coord in chunksNeeded)
         {
          
-            if (!activeChunks.ContainsKey(coord))
-            {
-                SpawnChunk(coord);
-                check = true;
-            }   
-            for (int x = -1; x <= 1; x++)
-            {
-                for (int y = -1; y <= 1; y++)
-                {
-                    if (x == 0 && y == 0) continue;
-                    if (x != 0 && y != 0) continue;
-
-                    Vector2Int adjCoord = new Vector2Int(coord.x + x, coord.y + y);
-
-                    // Check if this specific neighbor is needed and not already active
-                    if (chunksNeeded.Contains(adjCoord) && !activeChunks.ContainsKey(adjCoord))
-                    {
-                        SpawnChunk(adjCoord);
-                        check = true;
-                    }
-                }
-            }
+            
+            if (SpawnChunk(coord)) check = true;
+            if(GenerateNeighborChunks(coord)) check = true;
             if (check)
             {
                 check = false;
@@ -151,6 +139,26 @@ public class WorldManager : MonoBehaviour
             }
         }
     }
+
+    bool GenerateNeighborChunks(Vector2Int coord)
+    {
+        bool check = false;      
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0) continue;
+                if (x != 0 && y != 0) continue;
+
+                Vector2Int adjCoord = new(coord.x + x, coord.y + y);
+
+                // Check if this specific neighbor is needed and not already active
+                if (SpawnChunk(adjCoord))
+                    check = true;
+            }
+        }
+        return check;
+    }
     
     IEnumerator RenderChunks(List<Vector2Int> chunksNeeded)
     {
@@ -158,8 +166,9 @@ public class WorldManager : MonoBehaviour
         foreach (var coord in chunksNeeded)
         {
             Chunk chunk = GetChunk(coord);
-            if(chunk == null) continue;
-            chunk.DrawChunk();
+            count++;
+            if(chunk != null && !chunk.isDrawn)
+                chunk.DrawChunk();
             
             if(++count % chunksRenderedPerFrame == 0)
             {
@@ -172,16 +181,14 @@ public class WorldManager : MonoBehaviour
     {
         foreach (var coord in chunksNeeded)
         {
-            if (!activeChunks.ContainsKey(coord))
-            {
-                SpawnChunk(coord);
-            }   
+            SpawnChunk(coord);   
         }
     }
 
-
-    void SpawnChunk(Vector2Int coord)
+    //returns true if it generated the chunk, false otherwise
+    bool SpawnChunk(Vector2Int coord)
     {
+        if(activeChunks.ContainsKey(coord)) return false;
         Vector2Int chunkPos = coord * Chunk.chunkSize;
         GameObject chunkObj = Instantiate(chunkPrefab);
         chunkObj.transform.position = new Vector3(chunkPos.x, 0, chunkPos.y);
@@ -192,8 +199,8 @@ public class WorldManager : MonoBehaviour
         if(chunkSavedData.ContainsKey(coord))
             chunk.SetSavedData(chunkSavedData[coord]);
         chunk.Initialize(new(coord.x, coord.y), chunkMaterial, this);
-        // TODO: Registar no Dictionary activeChunks
         activeChunks.Add(coord, chunkObj);
+        return true;
     }
 
     public Chunk GetChunk(Vector2Int chunkPos)

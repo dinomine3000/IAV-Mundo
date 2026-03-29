@@ -1868,9 +1868,9 @@ MonoBehaviour:
   player: {fileID: 420915238}
   chunkPrefab: {fileID: 8665471304940420666, guid: 825c81d0975608344b33fd54f2344120, type: 3}
   chunkMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
-  renderDistance: 5
+  renderDistance: 6
   chunksGeneratedPerFrame: 2
-  chunksRenderedPerFrame: 2
+  chunksRenderedPerFrame: 1
   octaves: 4
   persistence: 0.3
   scale: 0.03

@@ -29,6 +29,8 @@ public class Chunk : MonoBehaviour
 
     public WorldManager worldManager;
 
+    public bool isDrawn = false;
+
     private Dictionary<Vector3Int, BlockType> savedData = null;
 
     public Vector2Int worldOffset; // coordenada do chunk no mundo (em chunks)
@@ -276,6 +278,7 @@ public class Chunk : MonoBehaviour
         childMesh.GetOrAddComponent<MeshRenderer>().material = chunkMaterial;
         childMesh.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
+        isDrawn = true;
     }
     
     bool HasSolidNeighbour(int x, int y, int z, bool isWaterCalling)

@@ -112,10 +112,11 @@ MonoBehaviour:
   vegetationThreshold: 0.5
   chunkMaterial: {fileID: 0}
   caveScale: 0.1
-  caveMinThreshold: 0.47
-  caveMaxThreshold: 0.53
+  caveMinThreshold: 0.485
+  caveMaxThreshold: 0.545
   caveSurfaceProtectionMargin: 4
   worldManager: {fileID: 0}
+  isDrawn: 0
   worldOffset: {x: 0, y: 0}
 --- !u!64 &3126751752983922727
 MeshCollider:

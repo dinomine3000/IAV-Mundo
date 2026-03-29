@@ -10,8 +10,10 @@ public class WorldManager : MonoBehaviour
     public Transform player;
     public GameObject chunkPrefab;
     public Material chunkMaterial;
+    public Material chunkTransparentMaterial;
     [Header("Configuração")]
     public int renderDistance = 3;
+    public float renderDistanceRemoveMultiplier = 2.5f;
     public int chunksGeneratedPerFrame = 2;
     public int chunksRenderedPerFrame = 5;
 
@@ -22,6 +24,8 @@ public class WorldManager : MonoBehaviour
     public float densityScale = 0.2f;
     public float densityThreshold = 0.1f;
     public int initialGridSize = 5;
+
+    [Header("Customização da geração de Chunks")]
     public int chunkHeight = 32;
     public int maxSolidHeight = 12;
     public int waterLevel = 35;
@@ -53,6 +57,16 @@ public class WorldManager : MonoBehaviour
         {
             Chunk chunk = GetChunk(new(lastPlayerChunk.x + cx, lastPlayerChunk.y + cz));
             if(chunk == null) continue;
+            chunk.DrawChunk();
+        }
+
+        if(min == 0 && max == 0)
+        {
+            Vector2Int coord = new(lastPlayerChunk.x, lastPlayerChunk.y);
+            SpawnChunk(coord);
+            GenerateNeighborChunks(coord);
+            Chunk chunk = GetChunk(new(lastPlayerChunk.x, lastPlayerChunk.y));
+            if(chunk == null) return;
             chunk.DrawChunk();
         }
     }
@@ -105,8 +119,8 @@ public class WorldManager : MonoBehaviour
         HashSet<Vector2Int> toRemove = new HashSet<Vector2Int>();
         foreach(Vector2Int vec in activeChunks.Keys)
         {
-            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance*2.5f
-                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance*2.5f ){
+            if(Math.Abs(vec.x - currentCenterChunk.x) > renderDistance*renderDistanceRemoveMultiplier
+                || Math.Abs(vec.y - currentCenterChunk.y) > renderDistance*renderDistanceRemoveMultiplier ){
                 toRemove.Add(vec);
             }
         }
@@ -132,8 +146,9 @@ public class WorldManager : MonoBehaviour
             if (check)
             {
                 check = false;
-                if(++count % chunksGeneratedPerFrame == 0)
+                if(++count >= chunksGeneratedPerFrame)
                 {
+                    count = 0;
                     yield return null; //pausa ate o prox frame
                 }
             }
@@ -170,8 +185,9 @@ public class WorldManager : MonoBehaviour
             if(chunk != null && !chunk.isDrawn)
                 chunk.DrawChunk();
             
-            if(++count % chunksRenderedPerFrame == 0)
+            if(count >= chunksRenderedPerFrame)
             {
+                count = 0;
                 yield return null; //pausa ate o prox frame
             }
         }
@@ -198,7 +214,7 @@ public class WorldManager : MonoBehaviour
         chunk.Setup(scale, octaves, persistence, maxSolidHeight, chunkHeight, waterLevel, mountainHeight, baseTerrainHeight, beachBreakHeight);
         if(chunkSavedData.ContainsKey(coord))
             chunk.SetSavedData(chunkSavedData[coord]);
-        chunk.Initialize(new(coord.x, coord.y), chunkMaterial, this);
+        chunk.Initialize(new(coord.x, coord.y), chunkMaterial, chunkTransparentMaterial, this);
         activeChunks.Add(coord, chunkObj);
         return true;
     }

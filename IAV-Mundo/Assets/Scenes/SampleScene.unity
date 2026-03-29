@@ -1868,8 +1868,10 @@ MonoBehaviour:
   player: {fileID: 420915238}
   chunkPrefab: {fileID: 8665471304940420666, guid: 825c81d0975608344b33fd54f2344120, type: 3}
   chunkMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
-  renderDistance: 6
-  chunksGeneratedPerFrame: 2
+  chunkTransparentMaterial: {fileID: 2100000, guid: 93fa152bfa989754abb682f21faa47a6, type: 2}
+  renderDistance: 5
+  renderDistanceRemoveMultiplier: 2.5
+  chunksGeneratedPerFrame: 1
   chunksRenderedPerFrame: 1
   octaves: 4
   persistence: 0.3
@@ -1877,12 +1879,12 @@ MonoBehaviour:
   densityScale: 0.2
   densityThreshold: 0.1
   initialGridSize: 5
-  chunkHeight: 64
-  maxSolidHeight: 10
-  waterLevel: 25
+  chunkHeight: 128
+  maxSolidHeight: 25
+  waterLevel: 45
   beachBreakHeight: 5
-  baseTerrainHeight: 3
-  mountainHeight: 35
+  baseTerrainHeight: 5
+  mountainHeight: 50
 --- !u!4 &2140951847
 Transform:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ public class Chunk : MonoBehaviour
     private int maxSolidHeight = 12;
     public float vegetationThreshold = 0.3f;
     public Material chunkMaterial;
+    public Material chunkTransparentMaterial;
     [Header("Cave Config")]
     public float caveScale = 0.1f;
     public float caveMinThreshold = 0.65f;
@@ -34,10 +35,11 @@ public class Chunk : MonoBehaviour
     private Dictionary<Vector3Int, BlockType> savedData = null;
 
     public Vector2Int worldOffset; // coordenada do chunk no mundo (em chunks)
-    public void Initialize(Vector2Int offset, Material mat, WorldManager manager)
+    public void Initialize(Vector2Int offset, Material mat, Material transparentMat, WorldManager manager)
     {
         worldOffset = offset;
         chunkMaterial = mat;
+        chunkTransparentMaterial = transparentMat;
         worldManager = manager;
         InitializeChunk(); // usa worldOffset para coordenadas globais
         LoadData();
@@ -137,6 +139,7 @@ public class Chunk : MonoBehaviour
                             type = BlockTypes.GRASS;
                             if(vegetationNoise > vegetationThreshold
                                 && y < chunkHeight - 1 
+                                && y < waterLevel + 10
                                 && chunkData[x, y+1, z].type.IsSameBlock(BlockTypes.AIR))
                                 {
                                     chunkData[x, y+1, z].type = BlockTypes.TALL_GRASS;
@@ -146,18 +149,22 @@ public class Chunk : MonoBehaviour
                         surfaceBlockCount++;  
                     } 
                     
-                    //if its right below grass, paint dirt.
-                    if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.GRASS) 
-                        type = BlockTypes.DIRT;  
-                    if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.GRASS) 
-                        type = BlockTypes.DIRT;   
+                    if(y < waterLevel + 15)
+                    {
                         
-                    //if its right below sand, paint sandstone.
-                    if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.SAND) 
-                        type = BlockTypes.SANDSTONE;  
-                    if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.SAND) 
-                        type = BlockTypes.SANDSTONE;   
-                    
+                        //if its right below grass, paint dirt.
+                        if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.GRASS) 
+                            type = BlockTypes.DIRT;  
+                        if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.GRASS) 
+                            type = BlockTypes.DIRT;   
+                            
+                        //if its right below sand, paint sandstone.
+                        if(y < chunkHeight - 1 && chunkData[x, y+1, z].type == BlockTypes.SAND) 
+                            type = BlockTypes.SANDSTONE;  
+                        if(y < chunkHeight - 2 && chunkData[x, y+2, z].type == BlockTypes.SAND) 
+                            type = BlockTypes.SANDSTONE;   
+                        
+                    }
                     if(surfaceBlockCount > 16 || y < 3) type = BlockTypes.DEEPSLATE;
                     
                 } else if(surfaceBlockCount == 0 && y <= waterLevel && oceanNoise < 0.75)
@@ -179,6 +186,64 @@ public class Chunk : MonoBehaviour
             chunkData[blockPos.x, blockPos.y, blockPos.z].type = savedData[blockPos];
         }
     }
+
+    public void DrawChunk()
+    {
+        List<Vector3> vertices = new();
+        List<int> triangles = new();
+        List<Vector2> uvs = new();
+
+        for(int x = 0; x < chunkSize; x++)
+        for(int y = 0; y < chunkHeight; y++)
+        for(int z = 0; z < chunkSize; z++)
+        {
+            Block block = chunkData[x, y, z];
+            
+            if(!block.isSolid() && !block.IsWater())
+            {
+                block.AddNonSolidFaceToMesh(vertices, triangles, uvs);
+                continue;   
+            }
+            
+            if(!HasSolidNeighbour(x, y, z + 1, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Front, vertices, triangles, uvs);
+                
+            if(!HasSolidNeighbour(x, y, z - 1, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Back, vertices, triangles, uvs);
+                
+            if(!HasSolidNeighbour(x, y + 1, z, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Top, vertices, triangles, uvs);
+                
+            if(!HasSolidNeighbour(x, y - 1, z, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Bottom, vertices, triangles, uvs);
+                
+            if(!HasSolidNeighbour(x - 1, y, z, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Left, vertices, triangles, uvs);
+                
+            if(!HasSolidNeighbour(x + 1, y, z, block.IsWater()))
+                block.AddSolidFaceToMesh(Block.CubeFace.Right, vertices, triangles, uvs);
+        }
+
+        Mesh mesh = new Mesh
+        {
+            vertices = vertices.ToArray(),
+            triangles = triangles.ToArray(),
+            uv = uvs.ToArray()
+        };
+
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+
+        gameObject.GetOrAddComponent<MeshFilter>().mesh = mesh;
+        gameObject.GetOrAddComponent<MeshRenderer>().material = chunkMaterial; 
+        gameObject.GetOrAddComponent<MeshCollider>().sharedMesh = mesh;
+        gameObject.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+        isDrawn = true;
+    }
+
+
+    /*
     public void DrawChunk()
     {
         // 1 - criar listas partilhadas
@@ -275,11 +340,10 @@ public class Chunk : MonoBehaviour
             childMesh = transform.Find("TransparentMesh").gameObject;
         }
         childMesh.GetOrAddComponent<MeshFilter>().mesh = transparentMesh;
-        childMesh.GetOrAddComponent<MeshRenderer>().material = chunkMaterial;
-        childMesh.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        childMesh.GetOrAddComponent<MeshRenderer>().material = chunkTransparentMaterial;
 
         isDrawn = true;
-    }
+    }*/
     
     bool HasSolidNeighbour(int x, int y, int z, bool isWaterCalling)
     {

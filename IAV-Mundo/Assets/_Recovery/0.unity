@@ -1677,7 +1677,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: dd3428ca2ed4def4aa3100794de6e8e0, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: ChryonAgent
@@ -1847,8 +1847,8 @@ MonoBehaviour:
   loseMaterial: {fileID: 2100000, guid: c1ce4048eac2d224cb8d34e987a0a2ee, type: 2}
   moveSpeed: 4
   gravity: 20
-  sunPenalty: -1
-  uselessAttackPenalty: -3
+  sunPenalty: -0.01
+  uselessAttackPenalty: 2
   killReward: 3
   hitReward: 1
   healthLosePerSecond: 7
@@ -1886,7 +1886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentManager
   cycleTime: 5
-  numberOfShades: 3
+  numberOfShades: 5
   arenaSize: {x: 16, y: 16}
   shadeObject: {fileID: 2935692860589391324, guid: f70f6e9b62b3dd94d96e6ce5006bd0bc, type: 3}
   lightObject: {fileID: 1810470791}

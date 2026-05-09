@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PointToPointWanderer : MonoBehaviour
+public class TargetScript : MonoBehaviour
 {
     private bool moving = false;
     public float moveSpeed = 4f;
@@ -11,7 +11,29 @@ public class PointToPointWanderer : MonoBehaviour
     private CharacterController controller;
     private Vector3 targetPosition;
     private float verticalVelocity;
+    public int maxHealth = 20;
+    private float health = 20;
 
+    public float GetHealth(){return health;}
+    public bool Hurt(float dmg)
+    {
+        health -= dmg;
+        if(health <= 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void Reset()
+    {
+        health = maxHealth;
+        CharacterController targetController = GetComponent<CharacterController>();
+        targetController.enabled = false;
+        transform.localPosition = new Vector3(
+            Random.Range(-5f, 5f), 0.5f, Random.Range(0.5f, 5f));
+        targetController.enabled = true;
+    }
     public void SetMoving(bool val){moving = val;}
     
     void Start()

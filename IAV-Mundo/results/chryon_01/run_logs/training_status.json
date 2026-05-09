@@ -1,0 +1,68 @@
+{
+    "stage": {
+        "lesson_num": 2
+    },
+    "ChryonAgent": {
+        "checkpoints": [
+            {
+                "steps": 649717,
+                "file_path": "results\\chryon_01\\ChryonAgent\\ChryonAgent-649717.onnx",
+                "reward": 0.5416272355585682,
+                "creation_time": 1778359953.7512712,
+                "auxillary_file_paths": [
+                    "results\\chryon_01\\ChryonAgent\\ChryonAgent-649717.pt"
+                ]
+            },
+            {
+                "steps": 788571,
+                "file_path": "results\\chryon_01\\ChryonAgent\\ChryonAgent-788571.onnx",
+                "reward": -1.0237548938303282,
+                "creation_time": 1778361140.6516957,
+                "auxillary_file_paths": [
+                    "results\\chryon_01\\ChryonAgent\\ChryonAgent-788571.pt"
+                ]
+            },
+            {
+                "steps": 910716,
+                "file_path": "results\\chryon_01\\ChryonAgent\\ChryonAgent-910716.onnx",
+                "reward": -4.602618944932179,
+                "creation_time": 1778362211.2903197,
+                "auxillary_file_paths": [
+                    "results\\chryon_01\\ChryonAgent\\ChryonAgent-910716.pt"
+                ]
+            },
+            {
+                "steps": 999998,
+                "file_path": "results\\chryon_01\\ChryonAgent\\ChryonAgent-999998.onnx",
+                "reward": -5.068764250725508,
+                "creation_time": 1778362847.7607038,
+                "auxillary_file_paths": [
+                    "results\\chryon_01\\ChryonAgent\\ChryonAgent-999998.pt"
+                ]
+            },
+            {
+                "steps": 1174167,
+                "file_path": "results\\chryon_01\\ChryonAgent\\ChryonAgent-1174167.onnx",
+                "reward": -4.894084456500473,
+                "creation_time": 1778363982.8079228,
+                "auxillary_file_paths": [
+                    "results\\chryon_01\\ChryonAgent\\ChryonAgent-1174167.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1174167,
+            "file_path": "results\\chryon_01\\ChryonAgent.onnx",
+            "reward": -4.894084456500473,
+            "creation_time": 1778363982.8079228,
+            "auxillary_file_paths": [
+                "results\\chryon_01\\ChryonAgent\\ChryonAgent-1174167.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

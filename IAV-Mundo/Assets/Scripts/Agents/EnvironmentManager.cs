@@ -16,11 +16,11 @@ public class EnvironmentManager : MonoBehaviour
 
     public void SetDoCycle(bool val) { doCycle = val; }
 
-    public void StartCycle()
+    public void StartCycle(bool cycle)
     {
         time = 0f;
-        doCycle = true;
-        SetDayState(false);
+        doCycle = cycle;
+        SetDayState(true);
     }
 
     void Start()
@@ -58,6 +58,7 @@ public class EnvironmentManager : MonoBehaviour
 
     private void SpawnShades(int n)
     {
+        ClearShades();
         for (int i = 0; i < n; i++)
         {
             float scaleX = Random.Range(1f, 5f);

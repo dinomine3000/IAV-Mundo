@@ -51,6 +51,11 @@ public class EnvironmentManager : MonoBehaviour
         lightObject.SetActive(isDay);
     }
 
+    public bool GetIsDay()
+    {
+        return isDay;
+    }
+
     private void SpawnShades(int n)
     {
         for (int i = 0; i < n; i++)

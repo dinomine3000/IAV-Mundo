@@ -1127,7 +1127,7 @@ GameObject:
   - component: {fileID: 5960377991381602257}
   - component: {fileID: 8545259697587640424}
   - component: {fileID: 3709786846246451121}
-  - component: {fileID: 6780125188576538869}
+  - component: {fileID: 8545259697587640425}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -1595,22 +1595,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &6780125188576538869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2196482740607708021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.ML-Agents::Unity.MLAgents.Agent
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
 --- !u!1 &6948041715401699542
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,6 +1819,7 @@ MonoBehaviour:
   m_DetectableTags:
   - Target
   - Wall
+  - Shade
   m_RaysPerDirection: 4
   m_MaxRayDegrees: 70
   m_SphereCastRadius: 0.5
@@ -1849,6 +1834,31 @@ MonoBehaviour:
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0
   m_EndVerticalOffset: -0.3
+--- !u!114 &8545259697587640425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196482740607708021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f83ecaafb1cd1bd44b4df95ab254921f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChryonAgent
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  envManager: {fileID: 8632823161312367173}
+  targetTransform: {fileID: 8674326601855512142}
+  floorRenderer: {fileID: 4663189220890611735}
+  defaultMaterial: {fileID: 2100000, guid: 63b78e35687dc984da8a34ba8d6a7678, type: 2}
+  winMaterial: {fileID: 2100000, guid: 088c8fa6fd83e2d4ca0195693691e16d, type: 2}
+  loseMaterial: {fileID: 2100000, guid: c1ce4048eac2d224cb8d34e987a0a2ee, type: 2}
+  moveSpeed: 4
+  gravity: 20
+  sunPenalty: -0.01
 --- !u!114 &8632823161312367173
 MonoBehaviour:
   m_ObjectHideFlags: 0

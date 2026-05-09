@@ -1,0 +1,61 @@
+using UnityEngine;
+
+public class PointToPointWanderer : MonoBehaviour
+{
+    private bool moving = false;
+    public float moveSpeed = 4f;
+    public float rotationSpeed = 10f;
+    public float arrivalDistance = 0.5f;
+    public Vector2 arenaSize = new Vector2(16, 16);
+
+    private CharacterController controller;
+    private Vector3 targetPosition;
+    private float verticalVelocity;
+
+    public void SetMoving(bool val){moving = val;}
+    
+    void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        PickNewTarget();
+    }
+
+    void Update()
+    {
+        if(!moving) return;
+        //chck dist
+        float distanceToTarget = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), 
+                                                 new Vector3(targetPosition.x, 0, targetPosition.z));
+
+        if (distanceToTarget < arrivalDistance)
+        {
+            PickNewTarget();
+        }
+
+        //rotate
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0; // Keep rotation horizontal
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        //gravity
+        if (controller.isGrounded) verticalVelocity = -0.5f;
+        else verticalVelocity -= 9.81f * Time.deltaTime;
+
+        //move
+        Vector3 velocity = transform.forward * moveSpeed;
+        velocity.y = verticalVelocity;
+
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    void PickNewTarget()
+    {
+        float rx = Random.Range(-(arenaSize.x / 2), arenaSize.x / 2);
+        float rz = Random.Range(-(arenaSize.y / 2), arenaSize.y / 2);
+        targetPosition = new Vector3(rx, transform.position.y, rz);
+    }
+}

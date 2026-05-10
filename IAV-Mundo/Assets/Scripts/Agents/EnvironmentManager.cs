@@ -12,9 +12,18 @@ public class EnvironmentManager : MonoBehaviour
     private float time = 0f;
     private bool doCycle = true;
     private bool isDay = false;
-    private List<GameObject> activeShades = new List<GameObject>();
+    private List<GameObject> activeShades = new();
 
     public void SetDoCycle(bool val) { doCycle = val; }
+
+    public void ResetSun(bool doCycle, bool isDay)
+    {
+        foreach(GameObject go in activeShades)
+            Destroy(go);
+        activeShades.Clear();
+        SetDoCycle(doCycle);
+        SetDayState(isDay);
+    }
 
     public void StartCycle(bool cycle)
     {
@@ -56,13 +65,19 @@ public class EnvironmentManager : MonoBehaviour
         return isDay;
     }
 
+    public Transform GetNearestShade(Vector3 pos)
+    {
+        return activeShades[0].transform;
+    }
+
     private void SpawnShades(int n)
     {
-        ClearShades();
-        for (int i = 0; i < n; i++)
+        ActivateShades();
+        if(activeShades.Count >= n) return;
+        for (int i = 0; i < n - activeShades.Count; i++)
         {
-            float scaleX = Random.Range(1f, 5f);
-            float scaleZ = Random.Range(1f, 5f);
+            float scaleX = Random.Range(3f, 6f);
+            float scaleZ = Random.Range(3f, 6f);
 
             float posX = Random.Range(-(arenaSize.x / 2) + (scaleX / 2), (arenaSize.x / 2) - (scaleX / 2));
             float posZ = Random.Range(-(arenaSize.y / 2) + (scaleZ / 2), (arenaSize.y / 2) - (scaleZ / 2));
@@ -78,7 +93,11 @@ public class EnvironmentManager : MonoBehaviour
     private void ClearShades()
     {
         foreach (GameObject obj in activeShades)
-            Destroy(obj);
-        activeShades.Clear();
+            obj.SetActive(false);
+    }
+    private void ActivateShades()
+    {
+        foreach (GameObject obj in activeShades)
+            obj.SetActive(true);
     }
 }

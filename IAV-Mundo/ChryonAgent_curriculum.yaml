@@ -61,7 +61,7 @@ environment_parameters:
           behavior: ChryonAgent
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 1
+          threshold: 6
         value: 0
       - name: Lesson1_dynamic
         completion_criteria:
@@ -69,7 +69,15 @@ environment_parameters:
           behavior: ChryonAgent
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 0.8
+          threshold: 6
         value: 1
-      - name: Lesson2_dayCycle
+      - name: Lesson2_day
+        completion_criteria:
+          measure: reward
+          behavior: ChryonAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 6
         value: 2
+      - name: Lesson3_dayCycle
+        value: 3

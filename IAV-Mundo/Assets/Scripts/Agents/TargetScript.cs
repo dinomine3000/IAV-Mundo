@@ -31,8 +31,9 @@ public class TargetScript : MonoBehaviour
         CharacterController targetController = GetComponent<CharacterController>();
         targetController.enabled = false;
         transform.localPosition = new Vector3(
-            Random.Range(-5f, 5f), 0.5f, Random.Range(0.5f, 5f));
+            Random.Range(-4f, 4f), 0.5f, Random.Range(0.5f, 5f));
         targetController.enabled = true;
+        PickNewTarget();
     }
     public void SetMoving(bool val){moving = val;}
     
@@ -46,7 +47,7 @@ public class TargetScript : MonoBehaviour
     {
         if(!moving) return;
         //chck dist
-        float distanceToTarget = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), 
+        float distanceToTarget = Vector3.Distance(new Vector3(transform.localPosition.x, 0, transform.localPosition.z), 
                                                  new Vector3(targetPosition.x, 0, targetPosition.z));
 
         if (distanceToTarget < arrivalDistance)
@@ -55,7 +56,7 @@ public class TargetScript : MonoBehaviour
         }
 
         //rotate
-        Vector3 direction = (targetPosition - transform.position).normalized;
+        Vector3 direction = (targetPosition - transform.localPosition).normalized;
         direction.y = 0; // Keep rotation horizontal
         if (direction != Vector3.zero)
         {

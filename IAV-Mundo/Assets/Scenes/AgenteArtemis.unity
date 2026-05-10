@@ -129,7 +129,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 503115039856223639, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
       propertyPath: cycleTime
-      value: 12
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1297948834374475097, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
       propertyPath: m_LocalPosition.x

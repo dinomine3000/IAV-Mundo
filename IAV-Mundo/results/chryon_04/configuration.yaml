@@ -38,7 +38,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 5
     even_checkpoints: false
-    max_steps: 2000000
+    max_steps: 2500000
     time_horizon: 64
     summary_freq: 10000
     threaded: false
@@ -70,7 +70,7 @@ environment_parameters:
     - value:
         sampler_type: constant
         sampler_parameters:
-          seed: 68
+          seed: 508
           value: 0
       name: Lesson0_static
       completion_criteria:
@@ -83,7 +83,7 @@ environment_parameters:
     - value:
         sampler_type: constant
         sampler_parameters:
-          seed: 69
+          seed: 509
           value: 1
       name: Lesson1_dynamic
       completion_criteria:
@@ -96,7 +96,7 @@ environment_parameters:
     - value:
         sampler_type: constant
         sampler_parameters:
-          seed: 70
+          seed: 510
           value: 2
       name: Lesson2_day
       completion_criteria:
@@ -104,12 +104,12 @@ environment_parameters:
         measure: reward
         min_lesson_length: 100
         signal_smoothing: true
-        threshold: 6.0
+        threshold: 4.0
         require_reset: false
     - value:
         sampler_type: constant
         sampler_parameters:
-          seed: 71
+          seed: 511
           value: 3
       name: Lesson3_dayCycle
       completion_criteria: null

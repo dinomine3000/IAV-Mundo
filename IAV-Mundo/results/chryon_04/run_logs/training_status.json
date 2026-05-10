@@ -1,26 +1,62 @@
 {
     "stage": {
-        "lesson_num": 0
+        "lesson_num": 3
     },
     "ChryonAgent": {
         "checkpoints": [
             {
-                "steps": 11631,
-                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-11631.onnx",
-                "reward": -80.60117530822754,
-                "creation_time": 1778424010.9013827,
+                "steps": 1499978,
+                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-1499978.onnx",
+                "reward": 5.676610426604748,
+                "creation_time": 1778428403.2818625,
                 "auxillary_file_paths": [
-                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-11631.pt"
+                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-1499978.pt"
+                ]
+            },
+            {
+                "steps": 1890604,
+                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-1890604.onnx",
+                "reward": 3.4560116001715264,
+                "creation_time": 1778429468.828994,
+                "auxillary_file_paths": [
+                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-1890604.pt"
+                ]
+            },
+            {
+                "steps": 1967893,
+                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-1967893.onnx",
+                "reward": 5.7257089139046995,
+                "creation_time": 1778429730.9502451,
+                "auxillary_file_paths": [
+                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-1967893.pt"
+                ]
+            },
+            {
+                "steps": 1999951,
+                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-1999951.onnx",
+                "reward": 6.169366255713006,
+                "creation_time": 1778429856.7214606,
+                "auxillary_file_paths": [
+                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-1999951.pt"
+                ]
+            },
+            {
+                "steps": 2453701,
+                "file_path": "results\\chryon_04\\ChryonAgent\\ChryonAgent-2453701.onnx",
+                "reward": 5.945878727076989,
+                "creation_time": 1778431218.7970188,
+                "auxillary_file_paths": [
+                    "results\\chryon_04\\ChryonAgent\\ChryonAgent-2453701.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 11631,
+            "steps": 2453701,
             "file_path": "results\\chryon_04\\ChryonAgent.onnx",
-            "reward": -80.60117530822754,
-            "creation_time": 1778424010.9013827,
+            "reward": 5.945878727076989,
+            "creation_time": 1778431218.7970188,
             "auxillary_file_paths": [
-                "results\\chryon_04\\ChryonAgent\\ChryonAgent-11631.pt"
+                "results\\chryon_04\\ChryonAgent\\ChryonAgent-2453701.pt"
             ]
         }
     },

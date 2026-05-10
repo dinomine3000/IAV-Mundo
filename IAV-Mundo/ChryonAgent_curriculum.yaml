@@ -48,7 +48,7 @@ behaviors:
         gamma: 0.99
         strength: 1.0
     keep_checkpoints: 5
-    max_steps: 2000000
+    max_steps: 2500000
     time_horizon: 64
     summary_freq: 10000
 
@@ -77,7 +77,7 @@ environment_parameters:
           behavior: ChryonAgent
           signal_smoothing: true
           min_lesson_length: 100
-          threshold: 6
+          threshold: 4
         value: 2
       - name: Lesson3_dayCycle
         value: 3

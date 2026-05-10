@@ -34,6 +34,9 @@ public class ChryonAgent : Agent
     public float healthLosePerSecond = 2f;
     public float distToAttack = 1f;
 
+    [Header("Simulation config")]
+    public bool SimpleCycles = false;
+
     private Vector3 velocity;
     private bool isInsideShade = false;
     private float health = 20f;
@@ -55,7 +58,10 @@ public class ChryonAgent : Agent
         targetScript.SetMoving(stage > 0);
         if (stage > 1 && envManager != null)
         {
-            envManager.ResetSun(stage > 2, true);
+            if(SimpleCycles)
+                envManager.ResetSun(stage > 2, true, 0);
+            else
+                envManager.ResetSun(stage > 2, stage < 3 || Random.Range(0, 1) > 0.5, Random.Range(0, 15));
             nearestShade = envManager.GetNearestShade(agentStartPos);
         } 
         else envManager.SetDoCycle(false);

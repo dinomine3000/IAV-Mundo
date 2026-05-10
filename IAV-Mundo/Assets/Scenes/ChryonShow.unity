@@ -304,17 +304,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3099532237133701050, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6028649047743330438, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
       propertyPath: m_Name
       value: Arena
       objectReference: {fileID: 0}
+    - target: {fileID: 6632432878286692329, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8419288737288394494, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 7d11f999ce2337744a6beb499c442031, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 8419288737288394494, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
       propertyPath: m_BehaviorType
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8451599407106809190, guid: 379a123cccafa0c4fb9e5caab6d65d4c, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

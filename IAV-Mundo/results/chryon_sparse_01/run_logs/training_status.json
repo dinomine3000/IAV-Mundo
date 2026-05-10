@@ -1,0 +1,41 @@
+{
+    "stage": {
+        "lesson_num": 3
+    },
+    "ChryonAgent": {
+        "checkpoints": [
+            {
+                "steps": 499997,
+                "file_path": "results\\chryon_sparse_01\\ChryonAgent\\ChryonAgent-499997.onnx",
+                "reward": -9.487533080553556,
+                "creation_time": 1778448231.4579625,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_01\\ChryonAgent\\ChryonAgent-499997.pt"
+                ]
+            },
+            {
+                "steps": 873134,
+                "file_path": "results\\chryon_sparse_01\\ChryonAgent\\ChryonAgent-873134.onnx",
+                "reward": -3.2967188243443766,
+                "creation_time": 1778448806.4997592,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_01\\ChryonAgent\\ChryonAgent-873134.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 873134,
+            "file_path": "results\\chryon_sparse_01\\ChryonAgent.onnx",
+            "reward": -3.2967188243443766,
+            "creation_time": 1778448806.4997592,
+            "auxillary_file_paths": [
+                "results\\chryon_sparse_01\\ChryonAgent\\ChryonAgent-873134.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

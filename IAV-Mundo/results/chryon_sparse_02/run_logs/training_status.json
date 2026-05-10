@@ -1,0 +1,59 @@
+{
+    "stage": {
+        "lesson_num": 3
+    },
+    "ChryonAgent": {
+        "checkpoints": [
+            {
+                "steps": 499965,
+                "file_path": "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-499965.onnx",
+                "reward": -5.99960625085514,
+                "creation_time": 1778449772.301745,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-499965.pt"
+                ]
+            },
+            {
+                "steps": 999983,
+                "file_path": "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-999983.onnx",
+                "reward": -0.16849491695563,
+                "creation_time": 1778450517.5422907,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-999983.pt"
+                ]
+            },
+            {
+                "steps": 1499967,
+                "file_path": "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-1499967.onnx",
+                "reward": null,
+                "creation_time": 1778451248.8724172,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-1499967.pt"
+                ]
+            },
+            {
+                "steps": 1637470,
+                "file_path": "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-1637470.onnx",
+                "reward": 5.594399596460992,
+                "creation_time": 1778451451.9391022,
+                "auxillary_file_paths": [
+                    "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-1637470.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1637470,
+            "file_path": "results\\chryon_sparse_02\\ChryonAgent.onnx",
+            "reward": 5.594399596460992,
+            "creation_time": 1778451451.9391022,
+            "auxillary_file_paths": [
+                "results\\chryon_sparse_02\\ChryonAgent\\ChryonAgent-1637470.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

@@ -1380,7 +1380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c503be19ea728e43b2d547379284c24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentManager
-  cycleTime: 5
+  cycleTime: 15
   numberOfShades: 1
   arenaSize: {x: 12, y: 12}
   shadeObject: {fileID: 2935692860589391324, guid: f70f6e9b62b3dd94d96e6ce5006bd0bc, type: 3}

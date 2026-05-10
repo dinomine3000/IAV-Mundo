@@ -1,0 +1,59 @@
+{
+    "stage": {
+        "lesson_num": 3
+    },
+    "ChryonAgent": {
+        "checkpoints": [
+            {
+                "steps": 499960,
+                "file_path": "results\\chryon_05\\ChryonAgent\\ChryonAgent-499960.onnx",
+                "reward": -14.294995662376836,
+                "creation_time": 1778434877.5380454,
+                "auxillary_file_paths": [
+                    "results\\chryon_05\\ChryonAgent\\ChryonAgent-499960.pt"
+                ]
+            },
+            {
+                "steps": 999953,
+                "file_path": "results\\chryon_05\\ChryonAgent\\ChryonAgent-999953.onnx",
+                "reward": 4.191157557070255,
+                "creation_time": 1778435779.3357317,
+                "auxillary_file_paths": [
+                    "results\\chryon_05\\ChryonAgent\\ChryonAgent-999953.pt"
+                ]
+            },
+            {
+                "steps": 1499958,
+                "file_path": "results\\chryon_05\\ChryonAgent\\ChryonAgent-1499958.onnx",
+                "reward": 6.2268015667796135,
+                "creation_time": 1778436686.270594,
+                "auxillary_file_paths": [
+                    "results\\chryon_05\\ChryonAgent\\ChryonAgent-1499958.pt"
+                ]
+            },
+            {
+                "steps": 1608547,
+                "file_path": "results\\chryon_05\\ChryonAgent\\ChryonAgent-1608547.onnx",
+                "reward": 6.578837641260841,
+                "creation_time": 1778436887.7440443,
+                "auxillary_file_paths": [
+                    "results\\chryon_05\\ChryonAgent\\ChryonAgent-1608547.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1608547,
+            "file_path": "results\\chryon_05\\ChryonAgent.onnx",
+            "reward": 6.578837641260841,
+            "creation_time": 1778436887.7440443,
+            "auxillary_file_paths": [
+                "results\\chryon_05\\ChryonAgent\\ChryonAgent-1608547.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

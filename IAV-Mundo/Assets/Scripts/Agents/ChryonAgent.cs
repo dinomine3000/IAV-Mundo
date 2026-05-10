@@ -24,6 +24,7 @@ public class ChryonAgent : Agent
     public float uselessAttackPenalty = -2f;
     public float killReward = 3f;
     public float shadeReward = 1f;
+    public float timePenalty = -2f;
 
     [Header("Stats")]
     public float moveSpeed = 4f;
@@ -48,7 +49,7 @@ public class ChryonAgent : Agent
     {
         int stage = Mathf.RoundToInt(
             Academy.Instance.EnvironmentParameters
-                .GetWithDefault("stage", 2f));
+                .GetWithDefault("stage", 3f));
         Vector3 agentStartPos = new Vector3(
             Random.Range(-5f, 5f), 0.5f, Random.Range(-5f, -0.5f));;
         targetScript.SetMoving(stage > 0);
@@ -116,7 +117,7 @@ public class ChryonAgent : Agent
 
         bool day = envManager.GetIsDay();
         //add time penalty during the night
-        if(!day) AddReward(-1f/MaxStep);
+        if(!day) AddReward(timePenalty/MaxStep);
         if (day && !isInsideShade)
         {
             float selfDamage = healthLosePerSecond*Time.deltaTime;;

@@ -16,13 +16,14 @@ public class EnvironmentManager : MonoBehaviour
 
     public void SetDoCycle(bool val) { doCycle = val; }
 
-    public void ResetSun(bool doCycle, bool isDay)
+    public void ResetSun(bool doCycle, bool isDay, float initialTime = 0f)
     {
         foreach(GameObject go in activeShades)
             Destroy(go);
         activeShades.Clear();
         SetDoCycle(doCycle);
         SetDayState(isDay);
+        time = initialTime;
     }
 
     public void StartCycle(bool cycle)
@@ -67,7 +68,7 @@ public class EnvironmentManager : MonoBehaviour
 
     public Transform GetNearestShade(Vector3 pos)
     {
-        return activeShades[0].transform;
+        return activeShades.Count == 0 ? null : activeShades[0].transform;
     }
 
     private void SpawnShades(int n)

@@ -8,7 +8,7 @@ using UnityEngine;
 // Cada handler recebe os arguments da tool call como JObject e extrai as
 // chaves que conhece. Aqui é o sítio para validar (enum fora de gama,
 // strings vazias) e fazer fallback gracioso.
-
+/*
 [RequireComponent(typeof(LLMAgentWithParameterizedActions))]
 public class GuardActionsV2 : MonoBehaviour
 {
@@ -111,4 +111,4 @@ public class GuardActionsV2 : MonoBehaviour
         }
         door.localRotation = end;
     }
-}
+}*/

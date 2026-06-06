@@ -8,21 +8,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
-// Evolução natural do LLMAgentWithActions da aula 10:
-//
-//   • Tools agora declaram um schema de `parameters` (com `type`, `enum`, `required`)
-//   • Respostas do Ollama com `arguments` desserializadas via Newtonsoft.Json
-//     (JsonUtility da Unity não trata JSON dinâmico — objectos com chaves variáveis)
-//   • Despacho via Dictionary<string, Action<JObject>> registado, em vez de
-//     gameObject.SendMessage(name). Cada handler recebe os arguments como JObject
-//     e extrai as chaves que conhece.
-//
-// Requer: Window → Package Manager → Add package by name → com.unity.nuget.newtonsoft-json
-
-public class LLMAgentWithParameterizedActions : MonoBehaviour
+public class GhostLLM : MonoBehaviour
 {
     [SerializeField] private string apiUrl = "http://localhost:11434/api/chat";
-    [SerializeField] private string modelName = "llama3.2:3b";
+    [SerializeField] private string modelName = "qwen2.5:7b";
 
     [SerializeField] private AgentConfigV2 agentConfig;
 
@@ -31,10 +20,10 @@ public class LLMAgentWithParameterizedActions : MonoBehaviour
 
     [Tooltip("Mesmo com schema validation, alguns modelos chamam tools fora da lista. Rede de segurança.")]
     [SerializeField] private bool validateAgainstDeclaredTools = true;
-
-    private TMP_Text agentReplyText;
+    private TMP_Text agentReplyText;    
     private readonly List<ChatMessage> history = new();
     private readonly Dictionary<string, Action<JObject>> handlers = new();
+    public int id = -1;
 
     // ── Registo de tools (chamado pelos componentes que sabem agir) ──────────
 

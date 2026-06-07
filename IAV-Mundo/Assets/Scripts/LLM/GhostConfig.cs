@@ -6,15 +6,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GhostConfig", menuName = "LLM/GhostConfig")]
 public class GhostConfig : ScriptableObject
 {
+    [Header("Identidade")]
+    [SerializeField] private string ghostName = "Fantasma";
+
     [Header("Personalidade (system prompt)")]
     [TextArea(3, 10)] [SerializeField] private string contextPrompt =
-        "Tu és um guarda velho num portão de pedra. Falas em português, de forma seca. " +
-        "Estás cansado de estar parado — se o jogador parecer perdido, ofereces-te para " +
-        "patrulhar ou para ir ver algo, mas sem enumerar a tua lista de tarefas como um menu.";
+        "És um espírito antigo que assombra esta casa. Falas em português europeu. " +
+        "Reages ao jogador de forma sinistra mas críptica. Nunca quebras o personagem.";
 
     [Header("Como responder (tom, comprimento)")]
     [TextArea(3, 10)] [SerializeField] private string answerGuideline =
-        "Responde em 1-2 frases, em português europeu, sempre em personagem.";
+        "Responde sempre em 1-2 frases curtas, em português europeu. " +
+        "Tom: perturbador, misterioso. Não listes as tuas capacidades.";
 
     [Header("Tools — declaradas via API com schema")]
     [SerializeField] private List<ToolEntryV2> tools = new()
@@ -33,8 +36,9 @@ public class GhostConfig : ScriptableObject
     };
 
     [Header("Fallback")]
-    [SerializeField] private string defaultErrorAnswer = "Desculpa, não consegui responder.";
+    [SerializeField] private string defaultErrorAnswer = "...";
 
+    public string GhostName => ghostName;
     public string ContextPrompt    => contextPrompt;
     public string AnswerGuideline  => answerGuideline;
     public IReadOnlyList<ToolEntryV2> Tools => tools;

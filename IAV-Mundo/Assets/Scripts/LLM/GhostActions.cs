@@ -9,6 +9,9 @@ public class GhostActions : MonoBehaviour
     [SerializeField] private Transform door;
     [SerializeField] private float openAngle = 90f;
     [SerializeField] private float openSpeed = 2f;
+    private bool doorOpen = true;
+    [SerializeField] private ParticleSystem bloodParticles;
+    [SerializeField] private GameObject orbSpawn;
 
     private GhostLLM agent;
     private TMP_Text agentReplyText;
@@ -22,7 +25,10 @@ public class GhostActions : MonoBehaviour
 
     private void Start()
     {
-        agent.RegisterTool("Shoot",    HandleFlicker);
+        agent.RegisterTool("Flicker",    HandleFlicker);
+        agent.RegisterTool("BangDoor",   HandleOpenDoor);
+        agent.RegisterTool("ShowOrbs",   HandleShowOrbs);
+        agent.RegisterTool("BleedingWalls", HandleBleedingWalls);
     }
 
     // ── Handlers ─────────────────────────────────────────────────────────────
@@ -50,15 +56,16 @@ public class GhostActions : MonoBehaviour
         }
 
         patroller.SetGoal(t);
-    }
+    }*/
 
     private void HandleOpenDoor(JObject args)
     {
         if (door == null) { Debug.Log("OpenDoor: porta não atribuída"); return; }
+        Debug.Log($"Ghost Action — Opening door");
         doorOpen = !doorOpen;
         StopAllCoroutines();
         StartCoroutine(RotateDoor(doorOpen ? openAngle : 0f));
-    }*/
+    }
 
     private void HandleFlicker(JObject args)
     {
@@ -85,7 +92,7 @@ public class GhostActions : MonoBehaviour
         }
         light.enabled = true; // Ensure light stays on (or off) after flickering
     }
-    private void HandleBangDoor(JObject args)
+/*    private void HandleBangDoor(JObject args)
     {
         string doorId = args["doorId"]?.ToString() ?? "ClosestDoor";
         Debug.Log($"Ghost Action — Slamming door: {doorId}");
@@ -104,20 +111,18 @@ public class GhostActions : MonoBehaviour
                 rb.AddForce(door.transform.forward * 500f, ForceMode.Impulse);
             }
         }
-    }
+    }*/
     
     private void HandleShowOrbs(JObject args)
     {
         int orbCount = args["count"]?.Value<int>() ?? 3;
         Debug.Log($"Ghost Action — Spawning {orbCount} ghostly orbs");
-
-        // Find the ghost's current favorite room center
-        Vector3 spawnPosition = GameObject.FindWithTag("GhostRoom")?.transform.position ?? Vector3.zero;
+        Vector3 spawnPosition = orbSpawn?.transform.position ?? Vector3.zero;
 
         for (int i = 0; i < orbCount; i++)
         {
             // Add a bit of random offset so they aren't stacked on top of each other
-            Vector3 randomOffset = new Vector3(Random.Range(-2f, 2f), Random.Range(0.5f, 2f), Random.Range(-2f, 2f));
+            Vector3 randomOffset = new Vector3(Random.Range(-5f, 5f), Random.Range(0.5f, 2f), Random.Range(-5f, 5f));
             
             if (ghostOrbPrefab != null)
             {
@@ -130,24 +135,11 @@ public class GhostActions : MonoBehaviour
     }
     private void HandleBleedingWalls(JObject args)
     {
-        // The LLM can pass intensity (e.g., "light", "heavy")
-        string intensity = args["intensity"]?.ToString() ?? "light";
-        Debug.Log($"Ghost Action — Walls begin bleeding. Intensity: {intensity}");
-
-        // Find the blood particle systems or blood decals pre-placed in the room
-        GameObject[] bloodEffects = GameObject.FindGameObjectsWithTag("WallBloodEffect");
+        Debug.Log($"Ghost Action — Walls begin bleeding.");
         
-        foreach (GameObject blood in bloodEffects)
-        {
-            ParticleSystem ps = blood.GetComponent<ParticleSystem>();
-            if (ps != null)
-            {
-                var main = ps.main;
-                // Adjust emission speed based on LLM input
-                main.simulationSpeed = (intensity == "heavy") ? 2.0f : 1.0f; 
-                
-                ps.Play();
-            }
+        if (bloodParticles != null)
+        {   
+            bloodParticles.Play();
         }
     }
     // ── Animação da porta (igual à aula 10) ─────────────────────────────────

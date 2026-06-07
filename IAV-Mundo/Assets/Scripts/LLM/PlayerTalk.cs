@@ -10,13 +10,14 @@ public class PlayerTalk : MonoBehaviour
 
     public void OnSend()
     {
+        Debug.Log("Sending");
         if (inputField == null || selector == null) return;
 
-        GameObject npc = selector.GetSelectedNPC();
+        GhostLLM npc = selector.GetSelectedNPC();
         if (npc == null || string.IsNullOrWhiteSpace(inputField.text)) return;
 
         string message = inputField.text;
         inputField.text = "";
-        npc.SendMessage("Talk", message);
+        npc.Talk(message);
     }
 }

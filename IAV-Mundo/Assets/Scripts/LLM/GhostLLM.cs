@@ -13,7 +13,7 @@ public class GhostLLM : MonoBehaviour
     [SerializeField] private string apiUrl = "http://localhost:11434/api/chat";
     [SerializeField] private string modelName = "qwen2.5:7b";
 
-    [SerializeField] private AgentConfigV2 agentConfig;
+    [SerializeField] private GhostConfig ghostConfig;
 
     [Tooltip("Mensagens user+assistant a manter (não conta o system prompt).")]
     [SerializeField] private int windowSize = 10;
@@ -24,6 +24,7 @@ public class GhostLLM : MonoBehaviour
     private readonly List<ChatMessage> history = new();
     private readonly Dictionary<string, Action<JObject>> handlers = new();
     public int id = -1;
+    public string ghostName => ghostConfig.ghostName;
 
     // ── Registo de tools (chamado pelos componentes que sabem agir) ──────────
 
@@ -50,7 +51,7 @@ public class GhostLLM : MonoBehaviour
 
     private IEnumerator SendToLLM(string userMessage)
     {
-        if (agentConfig == null)
+        if (ghostConfig == null)
         {
             if (agentReplyText != null) agentReplyText.text = "AgentConfig não atribuído.";
             yield break;
@@ -72,7 +73,7 @@ public class GhostLLM : MonoBehaviour
 
         if (http.result != UnityWebRequest.Result.Success)
         {
-            if (agentReplyText != null) agentReplyText.text = agentConfig.DefaultErrorAnswer;
+            if (agentReplyText != null) agentReplyText.text = ghostConfig.DefaultErrorAnswer;
             Debug.LogWarning($"LLM error: {http.error}\n{http.downloadHandler?.text}");
             history.RemoveAt(history.Count - 1);
             yield break;
@@ -104,7 +105,7 @@ public class GhostLLM : MonoBehaviour
             string toolName = fn["name"]?.ToString()?.Trim();
             if (string.IsNullOrEmpty(toolName)) continue;
 
-            if (validateAgainstDeclaredTools && !agentConfig.IsDeclared(toolName))
+            if (validateAgainstDeclaredTools && !ghostConfig.IsDeclared(toolName))
             {
                 Debug.LogWarning($"Tool rejeitada (não declarada no AgentConfig): '{toolName}'");
                 continue;
@@ -136,7 +137,7 @@ public class GhostLLM : MonoBehaviour
             messages.Add(new JObject { ["role"] = m.role, ["content"] = m.content });
 
         var tools = new JArray();
-        foreach (var t in agentConfig.Tools)
+        foreach (var t in ghostConfig.Tools)
             tools.Add(t.ToToolJson());
 
         var req = new JObject
@@ -152,9 +153,9 @@ public class GhostLLM : MonoBehaviour
     private string BuildSystemPrompt()
     {
         var sb = new StringBuilder();
-        sb.AppendLine(agentConfig.ContextPrompt);
+        sb.AppendLine(ghostConfig.ContextPrompt);
         sb.AppendLine();
-        sb.AppendLine(agentConfig.AnswerGuideline);
+        sb.AppendLine(ghostConfig.AnswerGuideline);
         return sb.ToString();
     }
 

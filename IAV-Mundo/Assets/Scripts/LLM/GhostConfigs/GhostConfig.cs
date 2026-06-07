@@ -7,7 +7,7 @@ using UnityEngine;
 public class GhostConfig : ScriptableObject
 {
     [Header("Identidade")]
-    [SerializeField] private string ghostName = "Fantasma";
+    [SerializeField] public string ghostName = "Fantasma";
 
     [Header("Personalidade (system prompt)")]
     [TextArea(3, 10)] [SerializeField] private string contextPrompt =
@@ -28,17 +28,40 @@ public class GhostConfig : ScriptableObject
             parameters = new List<ToolParam> {
                 new ToolParam {
                     name = "duration",
-                    description = "Duração do flicker em segundos",
-                    required = false
-                },
+                    description = "Duração do flicker em segundos, por defeito 3 segundos.",
+                    required = false,
+                    allowedValues = new(),
+                    type = "int"
+                }
             },
+        },
+        new ToolEntryV2 {
+            name = "BangDoor",
+            description = "Abre ou fecha a porta",
+            parameters =  new()
+        },
+        new ToolEntryV2 {
+            name = "ShowOrbs",
+            description = "Mostra esferas fantasma",
+            parameters = new List<ToolParam> {
+                new ToolParam {
+                    name = "count",
+                    description = "Quantas esferas mostrar. Idealmente um valor entre 3 e 10",
+                    required = true,
+                    allowedValues = new(),
+                    type = "int"
+                }
+            },
+        },
+        new ToolEntryV2 {
+            name = "BleedingWalls",
+            description = "Faz as paredes sangrar",
+            parameters = new()
         }
     };
 
     [Header("Fallback")]
     [SerializeField] private string defaultErrorAnswer = "...";
-
-    public string GhostName => ghostName;
     public string ContextPrompt    => contextPrompt;
     public string AnswerGuideline  => answerGuideline;
     public IReadOnlyList<ToolEntryV2> Tools => tools;

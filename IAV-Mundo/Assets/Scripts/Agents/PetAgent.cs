@@ -78,6 +78,18 @@ public class PetAgent : Agent
             }
             else
             {
+                List<string> orders = petActions.GetRandomAction().ordersMet;
+                string pickedOrder = orders[Random.Range(0, orders.Count - 1)];
+                string secondOrder = orders[Random.Range(0, orders.Count - 1)];
+                //get its associated orders
+                //set those to 1, rest to 0
+                foreach(string order in possiblePetOrders)
+                {
+                    if(pickedOrder.Equals(order)) trainingOrders.Add(order, Random.Range(0.6f, 1f));
+                    else if(secondOrder.Equals(order)) trainingOrders.Add(order, Random.Range(0.2f, 0.5f));
+                    else trainingOrders.Add(order, Random.Range(0, 0.15f));
+                }
+                /*
                 foreach(string order in possiblePetOrders)
                     trainingOrders.Add(order, Random.Range(0f, 1f));
                 int ordersAtZero = Random.Range(0, possiblePetOrders.Count - 1);
@@ -96,15 +108,15 @@ public class PetAgent : Agent
                 for (int i = 0; i < ordersAtZero; i++)
                 {
                     trainingOrders[keysCopy[i]] = 0f;
-                }   
+                }   */
             }
 
             SetActiveOrders(trainingOrders);
         }
 
-        sensor.AddObservation(petHealth.HungerPercentage);
-        sensor.AddObservation(petHealth.FunPercentage);
-        sensor.AddObservation(petHealth.SleepPercentage);
+        sensor.AddObservation(1-petHealth.HungerPercentage);
+        sensor.AddObservation(1-petHealth.FunPercentage);
+        sensor.AddObservation(1-petHealth.SleepPercentage);
         foreach(float order in orderInputs.Values)
         {
             sensor.AddObservation(order);

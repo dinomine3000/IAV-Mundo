@@ -1,0 +1,59 @@
+{
+    "stage": {
+        "lesson_num": 2
+    },
+    "PetAgent": {
+        "checkpoints": [
+            {
+                "steps": 499964,
+                "file_path": "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-499964.onnx",
+                "reward": 37.732394366197184,
+                "creation_time": 1781895282.4130745,
+                "auxillary_file_paths": [
+                    "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-499964.pt"
+                ]
+            },
+            {
+                "steps": 999977,
+                "file_path": "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-999977.onnx",
+                "reward": -30.96756638586521,
+                "creation_time": 1781895555.660926,
+                "auxillary_file_paths": [
+                    "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-999977.pt"
+                ]
+            },
+            {
+                "steps": 1499936,
+                "file_path": "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-1499936.onnx",
+                "reward": -18.877209924161434,
+                "creation_time": 1781895825.6472735,
+                "auxillary_file_paths": [
+                    "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-1499936.pt"
+                ]
+            },
+            {
+                "steps": 1548042,
+                "file_path": "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-1548042.onnx",
+                "reward": -16.62328004059584,
+                "creation_time": 1781895852.1405678,
+                "auxillary_file_paths": [
+                    "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-1548042.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1548042,
+            "file_path": "results\\PetAgent_curriculum_04\\PetAgent.onnx",
+            "reward": -16.62328004059584,
+            "creation_time": 1781895852.1405678,
+            "auxillary_file_paths": [
+                "results\\PetAgent_curriculum_04\\PetAgent\\PetAgent-1548042.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

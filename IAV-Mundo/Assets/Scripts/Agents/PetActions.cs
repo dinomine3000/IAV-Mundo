@@ -26,21 +26,17 @@ public class PetActions: MonoBehaviour
     private static void DoFlip(PetHealth petHealth, GameObject agent)
     {
         petHealth.Fun(petHealth.maxFun);
-        Debug.Log("Doing Action Flip");
     }
     private static void DoSleep(PetHealth petHealth, GameObject agent)
     {
         petHealth.Sleep(petHealth.maxSleep);
-        Debug.Log("Doing Action Sleep");
     }
     private static void DoEat(PetHealth petHealth, GameObject agent)
     {
         petHealth.Eat(petHealth.maxHunger);
-        Debug.Log("Doing Action Eat");
     }
     private static void DoSit(PetHealth petHealth, GameObject agent)
     {
         petHealth.Sleep(petHealth.maxSleep/2f);
-        Debug.Log("Doing Action Sleep");
     }
 }

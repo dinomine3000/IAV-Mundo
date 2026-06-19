@@ -1,0 +1,29 @@
+{
+    "PetAgent": {
+        "checkpoints": [
+            {
+                "steps": 277831,
+                "file_path": "results\\PetAgent01\\PetAgent\\PetAgent-277831.onnx",
+                "reward": 0.0,
+                "creation_time": 1781820747.3581545,
+                "auxillary_file_paths": [
+                    "results\\PetAgent01\\PetAgent\\PetAgent-277831.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 277831,
+            "file_path": "results\\PetAgent01\\PetAgent.onnx",
+            "reward": 0.0,
+            "creation_time": 1781820747.3581545,
+            "auxillary_file_paths": [
+                "results\\PetAgent01\\PetAgent\\PetAgent-277831.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

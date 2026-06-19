@@ -67,5 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "IAV-Mundo.slnx"
+    "dotnet.defaultSolution": "IAV-Mundo.slnx",
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

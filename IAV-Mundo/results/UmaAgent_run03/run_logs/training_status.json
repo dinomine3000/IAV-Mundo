@@ -1,0 +1,68 @@
+{
+    "stage": {
+        "lesson_num": 2
+    },
+    "PetAgent": {
+        "checkpoints": [
+            {
+                "steps": 499990,
+                "file_path": "results\\UmaAgent_run03\\PetAgent\\PetAgent-499990.onnx",
+                "reward": 47.38461538461539,
+                "creation_time": 1781975774.317645,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run03\\PetAgent\\PetAgent-499990.pt"
+                ]
+            },
+            {
+                "steps": 999995,
+                "file_path": "results\\UmaAgent_run03\\PetAgent\\PetAgent-999995.onnx",
+                "reward": -1.2357561703651183,
+                "creation_time": 1781976055.710582,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run03\\PetAgent\\PetAgent-999995.pt"
+                ]
+            },
+            {
+                "steps": 1499965,
+                "file_path": "results\\UmaAgent_run03\\PetAgent\\PetAgent-1499965.onnx",
+                "reward": 11.377171796928977,
+                "creation_time": 1781976332.9654295,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run03\\PetAgent\\PetAgent-1499965.pt"
+                ]
+            },
+            {
+                "steps": 1999975,
+                "file_path": "results\\UmaAgent_run03\\PetAgent\\PetAgent-1999975.onnx",
+                "reward": 8.526807704519841,
+                "creation_time": 1781976614.5959997,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run03\\PetAgent\\PetAgent-1999975.pt"
+                ]
+            },
+            {
+                "steps": 2065681,
+                "file_path": "results\\UmaAgent_run03\\PetAgent\\PetAgent-2065681.onnx",
+                "reward": null,
+                "creation_time": 1781976653.8602476,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run03\\PetAgent\\PetAgent-2065681.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2065681,
+            "file_path": "results\\UmaAgent_run03\\PetAgent.onnx",
+            "reward": null,
+            "creation_time": 1781976653.8602476,
+            "auxillary_file_paths": [
+                "results\\UmaAgent_run03\\PetAgent\\PetAgent-2065681.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "stage": {
+        "lesson_num": 2
+    },
+    "PetAgent": {
+        "checkpoints": [
+            {
+                "steps": 499978,
+                "file_path": "results\\UmaAgent_run02\\PetAgent\\PetAgent-499978.onnx",
+                "reward": -66.05152677165137,
+                "creation_time": 1781971918.4408956,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run02\\PetAgent\\PetAgent-499978.pt"
+                ]
+            },
+            {
+                "steps": 999947,
+                "file_path": "results\\UmaAgent_run02\\PetAgent\\PetAgent-999947.onnx",
+                "reward": 14.108917227387428,
+                "creation_time": 1781972200.7816896,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run02\\PetAgent\\PetAgent-999947.pt"
+                ]
+            },
+            {
+                "steps": 1499961,
+                "file_path": "results\\UmaAgent_run02\\PetAgent\\PetAgent-1499961.onnx",
+                "reward": 29.876686096191406,
+                "creation_time": 1781972483.2877586,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run02\\PetAgent\\PetAgent-1499961.pt"
+                ]
+            },
+            {
+                "steps": 1536430,
+                "file_path": "results\\UmaAgent_run02\\PetAgent\\PetAgent-1536430.onnx",
+                "reward": 32.099186186063086,
+                "creation_time": 1781972502.9726787,
+                "auxillary_file_paths": [
+                    "results\\UmaAgent_run02\\PetAgent\\PetAgent-1536430.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1536430,
+            "file_path": "results\\UmaAgent_run02\\PetAgent.onnx",
+            "reward": 32.099186186063086,
+            "creation_time": 1781972502.9726787,
+            "auxillary_file_paths": [
+                "results\\UmaAgent_run02\\PetAgent\\PetAgent-1536430.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.1.1+cpu"
+    }
+}

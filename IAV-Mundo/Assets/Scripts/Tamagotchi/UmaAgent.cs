@@ -14,6 +14,7 @@ public class UmaAgent : Agent
     public UmaHealth petHealth;
     public List<string> possiblePetOrders;
     public bool isTraining = true;
+    public StatsMenu statsMenu = null;
     private Dictionary<string, float> orderInputs = new();
 
     public void ReactTo(Dictionary<string, float> orders)
@@ -169,6 +170,7 @@ public class UmaAgent : Agent
             Debug.Log("Pet died");
             EndEpisode();
         }
+        statsMenu?.UpdateStats(petHealth);
         //after each action done, clear the input stack.
         orderInputs.Clear();
     }

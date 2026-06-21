@@ -20,6 +20,13 @@ public class UmaHealth : MonoBehaviour
     public float healthLowEnergyDepletionRate = 1f;
     public float energyDepletionRate = 35f;
 
+    // Public Getters for Training Stats
+    public float SpeedStat => speed;
+    public float StaminaStat => stamina;
+    public float PowerStat => power;
+    public float GutsStat => guts;
+    public float WitStat => wit;
+
     // Normalized Getters (0.0 to 1.0)
     public float EnergyPercentage => maxEnergy > 0 ? energy / maxEnergy : 0f;
     public float HealthPercentage => maxHealth > 0 ? health / maxHealth : 0f;

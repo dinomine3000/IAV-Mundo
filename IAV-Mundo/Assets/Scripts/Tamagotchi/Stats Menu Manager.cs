@@ -12,11 +12,11 @@ public class StatsMenu : MonoBehaviour
     public GameObject performanceCont;
 
     [Header("Stats")]
-    public TextMeshPro speed;
-    public TextMeshPro stamina;
-    public TextMeshPro power;
-    public TextMeshPro guts;
-    public TextMeshPro wit;
+    public TextMeshProUGUI speed;
+    public TextMeshProUGUI stamina;
+    public TextMeshProUGUI power;
+    public TextMeshProUGUI guts;
+    public TextMeshProUGUI wit;
 
     [Header("Parameters")]
     public Slider energySlider;
@@ -36,7 +36,7 @@ public class StatsMenu : MonoBehaviour
         performanceBtn.onClick.AddListener(() => SwapMenu(false));
     }
 
-    // Método para atualizar a UI com os dados do PetAgent
+    // Mï¿½todo para atualizar a UI com os dados do PetAgent
     public void UpdateStats(float max, float spd, float sta, float pwr, float gts, float wt, float nrg, float hlth)
     {
         string max_string = max.ToString("F0");
@@ -51,22 +51,36 @@ public class StatsMenu : MonoBehaviour
 
         HealthDisplay();
     }
+    public void UpdateStats(UmaHealth umaHealth)
+    {
+        string max_string = 120.ToString("F0");
+        speed.text = umaHealth.SpeedStat.ToString("F0") + "/" + max_string;
+        stamina.text = umaHealth.StaminaStat.ToString("F0") + "/" + max_string;
+        power.text = umaHealth.PowerStat.ToString("F0") + "/" + max_string;
+        guts.text = umaHealth.GutsStat.ToString("F0") + "/" + max_string;
+        wit.text = umaHealth.WitStat.ToString("F0") + "/" + max_string;
 
-    // Método chamado no final da sessão para mostrar o menu de performance
+        energySlider.value = umaHealth.EnergyPercentage;
+        healthSlider.value = umaHealth.HealthPercentage;
+
+        HealthDisplay();
+    }
+
+    // Mï¿½todo chamado no final da sessï¿½o para mostrar o menu de performance
     public void ShowPerformance()
     {
         performanceBtn.interactable = true;
         SwapMenu(false);
     }
 
-    // Método que alterna entre os containers
+    // Mï¿½todo que alterna entre os containers
     public void SwapMenu(bool showStats)
     {
         statsCont.SetActive(showStats);
         performanceCont.SetActive(!showStats);
     }
 
-    // Método que ajusta a cor da barra de health de acordo com a percentagem do slider
+    // Mï¿½todo que ajusta a cor da barra de health de acordo com a percentagem do slider
     private void HealthDisplay()
     {
         if (healthFillArea == null) return;

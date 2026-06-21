@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UmaActions : MonoBehaviour
 {
+    public GameManager gameManager;
     private UmaLLM llmAgent;
     private UmaAgent rlAgent;
     private List<UmaAction> actions = new()
@@ -43,6 +46,7 @@ public class UmaActions : MonoBehaviour
     public List<string> InvokeAction(int index, UmaHealth petHealth, GameObject agent)
     {
         actions[index].DoAction(petHealth, agent);
+        gameManager.ChangeImage(index);
         return actions[index].ordersMet;
     }
 

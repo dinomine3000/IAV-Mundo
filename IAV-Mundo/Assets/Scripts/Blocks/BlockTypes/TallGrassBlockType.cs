@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TallGrassBlockType : BlockType
 {
-    public TallGrassBlockType(Vector2Int uvCoords) : base(uvCoords, false, true, true, defaultTransparency: true)
+    public TallGrassBlockType(Vector2Int uvCoords) : base(uvCoords, isSolid: false, true, true, defaultTransparency: true)
     {}
 
 

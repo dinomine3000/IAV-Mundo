@@ -1,0 +1,68 @@
+{
+    "difficulty": {
+        "lesson_num": 4
+    },
+    "JumpAgent": {
+        "checkpoints": [
+            {
+                "steps": 1499968,
+                "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-1499968.onnx",
+                "reward": 0.3491066575050354,
+                "creation_time": 1795526949.023241,
+                "auxillary_file_paths": [
+                    "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-1499968.pt"
+                ]
+            },
+            {
+                "steps": 1999988,
+                "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-1999988.onnx",
+                "reward": -0.5396173368292164,
+                "creation_time": 1795528076.3588405,
+                "auxillary_file_paths": [
+                    "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-1999988.pt"
+                ]
+            },
+            {
+                "steps": 2499982,
+                "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-2499982.onnx",
+                "reward": 0.12539915722093464,
+                "creation_time": 1795529094.2746227,
+                "auxillary_file_paths": [
+                    "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-2499982.pt"
+                ]
+            },
+            {
+                "steps": 2999960,
+                "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-2999960.onnx",
+                "reward": 0.2652616276535937,
+                "creation_time": 1795530120.123717,
+                "auxillary_file_paths": [
+                    "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-2999960.pt"
+                ]
+            },
+            {
+                "steps": 3000005,
+                "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-3000005.onnx",
+                "reward": 0.27075884380239124,
+                "creation_time": 1795530120.1957183,
+                "auxillary_file_paths": [
+                    "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-3000005.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3000005,
+            "file_path": "results\\JumpAgent_curriculum_01\\JumpAgent.onnx",
+            "reward": 0.27075884380239124,
+            "creation_time": 1795530120.1957183,
+            "auxillary_file_paths": [
+                "results\\JumpAgent_curriculum_01\\JumpAgent\\JumpAgent-3000005.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cpu"
+    }
+}

@@ -1,0 +1,69 @@
+# MP2 — JumpAgent com curriculum learning
+# Uso: mlagents-learn JumpAgent_curriculum.yaml --run-id=jump_curr_01
+#
+# Thresholds: a recompensa máxima por episódio é < 1 (time penalty + custo dos saltos),
+# e baixa à medida que o percurso cresce. Por isso o threshold desce lição a lição:
+#   recompensa média ≈ p·(≈0.8–0.9) + (1−p)·(−1)  →  threshold 0.6 ≈ 85–90 % de sucesso.
+
+behaviors:
+  JumpAgent:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      beta: 5.0e-3          # entropia: se o agente "esquecer" o salto após a L0, subir para 1.0e-2
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3
+      learning_rate_schedule: linear
+    network_settings:
+      normalize: false
+      hidden_units: 256
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    keep_checkpoints: 5
+    max_steps: 3000000
+    time_horizon: 128
+    summary_freq: 10000
+
+environment_parameters:
+  difficulty:
+    curriculum:
+      - name: L0_plano            # sem buracos: navegar e aprender que saltar custa
+        completion_criteria:
+          measure: reward
+          behavior: JumpAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.8
+        value: 0
+      - name: L1_estreito         # 1 buraco a 50 % do alcance: saltar é necessário
+        completion_criteria:
+          measure: reward
+          behavior: JumpAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.75
+        value: 1
+      - name: L2_largo            # 1 buraco a 85–95 % do alcance: timing (saltar na borda)
+        completion_criteria:
+          measure: reward
+          behavior: JumpAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.7
+        value: 2
+      - name: L3_varios           # 2–3 buracos aleatórios: encadear saltos
+        completion_criteria:
+          measure: reward
+          behavior: JumpAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.6
+        value: 3
+      - name: L4_ilhas            # 3 buracos + plataformas desalinhadas: direcção do salto
+        value: 4

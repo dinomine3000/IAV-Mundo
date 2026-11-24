@@ -78,6 +78,14 @@ public class Chunk : MonoBehaviour
         this.beachBreakHeight = beachBreakHeight;
     }
 
+    //returns a map with the world-space coordinates of each placed feature. 
+    // uses perlin noise to dynamically generate a map of placed features. 
+    // should also filter features based on their minimum distance allowed
+    /*public Dictionary<Vector2, PlacedFeature> getPlacedFeatures()
+    {
+        
+    }*/
+
     void InitializeChunk()
     {
         chunkData = new Block[chunkSize, chunkHeight, chunkSize];
@@ -87,6 +95,8 @@ public class Chunk : MonoBehaviour
         {
             int blockX = x + worldOffset.x*chunkSize; 
             int blockZ = z + worldOffset.y*chunkSize; 
+        
+            float poplarNoise = Mathf.Pow(NoiseUtil.FBm(blockX + 6163, blockZ - 3200, 2, 0.005f), 0.5f);
         
             float heightNoise = NoiseUtil.FBm(blockX, blockZ, octaves, scale, persistence);
             float caveOpeningNoise = Mathf.Pow(NoiseUtil.FBm(blockX, blockZ, 2, 0.1f), 1.2f);
@@ -132,22 +142,36 @@ public class Chunk : MonoBehaviour
                 if (solid)
                 {
                     type = BlockTypes.STONE;  
+
                     if(surfaceBlockCount == 0)
-                    {
-                        if(oceanNoise > 0.8)
                         {
-                            type = BlockTypes.GRASS;
-                            if(vegetationNoise > vegetationThreshold
-                                && y < chunkHeight - 1 
-                                && y < waterLevel + 10
-                                && chunkData[x, y+1, z].type.IsSameBlock(BlockTypes.AIR))
+                            //place sand
+                            if(oceanNoise < 0.8 && y < waterLevel + 5) type = BlockTypes.SAND;
+                            //paint other blocks 
+                            else if (y < waterLevel + 25 - vegetationNoise*4)
+                            {
+                                //palce poplar grass
+                                if(poplarNoise > 0.75) type=BlockTypes.POPLAR_GRASS;
+                                //place grass and tall grass
+                                else
                                 {
-                                    chunkData[x, y+1, z].type = BlockTypes.TALL_GRASS;
-                                } 
+                                    type = BlockTypes.GRASS;
+                                    if(vegetationNoise > vegetationThreshold
+                                        && y < chunkHeight - 1 
+                                        && y < waterLevel + 10
+                                        && chunkData[x, y+1, z].type.IsSameBlock(BlockTypes.AIR))
+                                        {
+                                            chunkData[x, y+1, z].type = BlockTypes.TALL_GRASS;
+                                        }   
+                                }
+                            } else 
+                            {
+                                if(y > waterLevel + 30 || vegetationNoise < 0.45){type=BlockTypes.SNOW;}
+                                else{type=BlockTypes.STONE;}
+                            }
                         }
-                        else type = BlockTypes.SAND;
                         surfaceBlockCount++;  
-                    } 
+                     
                     
                     if(y < waterLevel + 15)
                     {

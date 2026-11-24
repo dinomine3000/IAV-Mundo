@@ -9,9 +9,14 @@ public class BlockTypes
     public static BlockType AIR = registerBlock("air", new BlockType(new(0, 0), false));
     public static BlockType STONE = registerBlock("stone", new BlockType(new(16, 0)));
     public static BlockType BEDROCK = registerBlock("bedrock", new BlockType(new(16, 16)));
+    public static BlockType SNOW = registerBlock("snow", new BlockType(new(32, 64)));
     public static BlockType GRASS = registerBlock("grass",
          new BlockType(new(48, 0))
          .WithFaceTexture(Block.CubeFace.Top, new(128, 32))
+         .WithFaceTexture(Block.CubeFace.Bottom, new(32, 0)));
+    public static BlockType POPLAR_GRASS = registerBlock("poplar_grass",
+         new BlockType(new(144, 128))
+         .WithFaceTexture(Block.CubeFace.Top, new(176, 128))
          .WithFaceTexture(Block.CubeFace.Bottom, new(32, 0)));
     public static BlockType DIRT = registerBlock("dirt", new BlockType(new(32, 0)));
     public static BlockType SANDSTONE = registerBlock("sandstone", 
